@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\FacebookFetcher;
 use App\Console\Commands\FetchStatesAreasMY;
 use App\Console\Commands\GoogleScrap;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         FetchStatesAreasMY::class,
-        GoogleScrap::class
+        GoogleScrap::class,
+        FacebookFetcher::class
     ];
 
     /**
