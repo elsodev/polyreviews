@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ca89be378f67ae6e71f1ff72d95d9082",
-    "content-hash": "974dc606c0ea7e1356a30086de2f0d98",
+    "hash": "874f5bdf12cfc17240fe81dd385c0cce",
+    "content-hash": "8bce95609722e61de3db6f1b9781a6be",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1255,6 +1255,159 @@
             "time": "2016-10-02 15:51:17"
         },
         {
+            "name": "serps/core",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serp-spider/core.git",
+                "reference": "403aa517357eb105ffdbcec67539e42ca9cf8376"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serp-spider/core/zipball/403aa517357eb105ffdbcec67539e42ca9cf8376",
+                "reference": "403aa517357eb105ffdbcec67539e42ca9cf8376",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "psr/http-message": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.1",
+                "squizlabs/php_codesniffer": "~2.5",
+                "zendframework/zend-diactoros": "1.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Serps\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Fair"
+            ],
+            "authors": [
+                {
+                    "name": "Soufiane GHZAL",
+                    "homepage": "https://github.com/gsouf"
+                }
+            ],
+            "description": "Search engine scrapper",
+            "homepage": "https://github.com/serp-spider/core",
+            "keywords": [
+                "bing",
+                "google",
+                "scrapper",
+                "search engine",
+                "yahoo"
+            ],
+            "time": "2016-09-25 18:37:24"
+        },
+        {
+            "name": "serps/http-client-curl",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serp-spider/http-client-curl.git",
+                "reference": "4acb0ae3ebb0fa89e43b8e3509f4d20d381549dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serp-spider/http-client-curl/zipball/4acb0ae3ebb0fa89e43b8e3509f4d20d381549dc",
+                "reference": "4acb0ae3ebb0fa89e43b8e3509f4d20d381549dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "serps/core": "~0.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.2",
+                "serps/http-client-test-suite": "*",
+                "squizlabs/php_codesniffer": "~2.5",
+                "zendframework/zend-diactoros": ">=1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Serps\\HttpClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Fair"
+            ],
+            "authors": [
+                {
+                    "name": "Soufiane GHZAL",
+                    "homepage": "https://github.com/gsouf"
+                }
+            ],
+            "description": "CURL client for SERPS",
+            "homepage": "https://github.com/serp-spider/serps-http-client-curl",
+            "keywords": [
+                "SERPS",
+                "curl",
+                "http client"
+            ],
+            "time": "2016-09-15 21:19:21"
+        },
+        {
+            "name": "serps/search-engine-google",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serp-spider/search-engine-google.git",
+                "reference": "a2e7df73dd3d4eacbbe864d08aa93a1bf5b81cc9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serp-spider/search-engine-google/zipball/a2e7df73dd3d4eacbbe864d08aa93a1bf5b81cc9",
+                "reference": "a2e7df73dd3d4eacbbe864d08aa93a1bf5b81cc9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5",
+                "serps/core": "~0.1.0",
+                "symfony/css-selector": ">=2",
+                "zendframework/zend-diactoros": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.2",
+                "squizlabs/php_codesniffer": "~2.5",
+                "symfony/yaml": ">=2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Serps\\SearchEngine\\Google\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Fair"
+            ],
+            "authors": [
+                {
+                    "name": "Soufiane GHZAL",
+                    "homepage": "https://github.com/gsouf"
+                }
+            ],
+            "description": "Google Rules and client for SERPS",
+            "homepage": "https://github.com/serp-spider/search-engine-google",
+            "keywords": [
+                "SERPS",
+                "google"
+            ],
+            "time": "2016-10-01 10:30:40"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v5.4.3",
             "source": {
@@ -2349,6 +2502,56 @@
                 "laravel"
             ],
             "time": "2016-03-30 14:59:10"
+        },
+        {
+            "name": "zendframework/zend-diactoros",
+            "version": "1.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-diactoros.git",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/969ff423d3f201da3ff718a5831bb999bb0669b0",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4 || ^7.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "~1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.6 || ^5.5",
+                "squizlabs/php_codesniffer": "^2.3.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev",
+                    "dev-develop": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Diactoros\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://github.com/zendframework/zend-diactoros",
+            "keywords": [
+                "http",
+                "psr",
+                "psr-7"
+            ],
+            "time": "2016-10-11 13:25:21"
         }
     ],
     "packages-dev": [
