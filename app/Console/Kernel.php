@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\FacebookFetcher;
 use App\Console\Commands\FetchStatesAreasMY;
 use App\Console\Commands\GoogleScrap;
 use App\Console\Commands\FoursquareFetcher;
@@ -18,7 +19,11 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         FetchStatesAreasMY::class,
         GoogleScrap::class,
+<<<<<<< .merge_file_JZe9rQ
         FoursquareFetcher::class
+=======
+        FacebookFetcher::class
+>>>>>>> .merge_file_N23IE1
     ];
 
     /**

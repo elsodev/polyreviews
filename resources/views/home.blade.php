@@ -24,7 +24,7 @@
 @endsection
 
 @section('scripts')
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.keys.googlemaps') }}">
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('app.keys.googlemaps') }}&libraries=places">
     </script>
     <script src="{{ asset('js/mainscript.js') }}"></script>
 @endsection

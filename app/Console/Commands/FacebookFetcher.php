@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\ScrapperController;
 use Illuminate\Console\Command;
 
 class FacebookFetcher extends Command
@@ -11,7 +12,7 @@ class FacebookFetcher extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'fetch:facebook {keyword}';
 
     /**
      * The console command description.
@@ -37,6 +38,12 @@ class FacebookFetcher extends Command
      */
     public function handle()
     {
-        //
+        $scrapper = new ScrapperController();
+        $responses = $scrapper->scrapFacebook($this->argument('keyword'));
+
+        foreach($responses['data'] as $place) {
+            $this->info('Name: '.$place['name'].', ID:'.$place['id']);
+        }
+
     }
 }
