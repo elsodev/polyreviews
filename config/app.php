@@ -203,6 +203,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
 
     ],
 
@@ -252,6 +253,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
+        'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
+
     ],
 
 ];

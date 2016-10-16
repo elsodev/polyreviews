@@ -9,7 +9,8 @@
         "laravel/framework": "5.3.*",
         "weidner/goutte": "@dev",
         "serps/search-engine-google": "^0.1.2",
-        "serps/http-client-curl":"^0.1.0"
+        "serps/http-client-curl":"^0.1.0",
+        "sammyk/laravel-facebook-sdk": "^3.0"
 
     },
     "require-dev": {
