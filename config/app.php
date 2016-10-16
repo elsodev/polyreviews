@@ -4,6 +4,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Foursqaure App ID & Secret
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'foursquare_clientId' => 'V01N1WCHCB0I5TPTRHB0VESPZPHUYMIEYLSE5JVGFDBFAQHX',
+    'foursquare_clientSecret' => 'JSFSHRA5OHNIKMMABS4SJVXDEZWN1XIL1NGU0F4PO2JELFRT',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
     |

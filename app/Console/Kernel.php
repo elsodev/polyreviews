@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\FetchStatesAreasMY;
 use App\Console\Commands\GoogleScrap;
+use App\Console\Commands\FoursquareFetcher;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         FetchStatesAreasMY::class,
-        GoogleScrap::class
+        GoogleScrap::class,
+        FoursquareFetcher::class
     ];
 
     /**
