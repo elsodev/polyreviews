@@ -19,11 +19,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         FetchStatesAreasMY::class,
         GoogleScrap::class,
-<<<<<<< .merge_file_JZe9rQ
-        FoursquareFetcher::class
-=======
+        FoursquareFetcher::class,
         FacebookFetcher::class
->>>>>>> .merge_file_N23IE1
     ];
 
     /**
