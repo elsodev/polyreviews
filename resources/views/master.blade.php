@@ -17,6 +17,9 @@
     @yield('head')
 
     <script>
+        var site = {
+            'url' : '{{ url('/') }}'
+        };
         var locations = {!! json_encode(config('app.locations')) !!}
     </script>
 

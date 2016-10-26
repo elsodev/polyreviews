@@ -16,45 +16,26 @@ var main = new Vue({
         getNearby: function()
         {
             var me = this;
-            var service = new google.maps.places.PlacesService(this.map);
 
-            var types = [ 'cafe', 'restaurant', 'bar', 'meal_takeaway', 'meal_delivery' , 'bakery', 'food'];
-                $.each(types, function(index, value) {
-                    service.nearbySearch({
-                        location : {lat: locations.default_center.lat, lng: locations.default_center.lng},
-                        radius : 2000,
-                        type : [value]
-                    }, me.nearByCallback);
+            $.ajax({
+               url: site.url + '/getStartingPins', dataType: 'json', type: 'get'
+            }).success(function(data) {
+                $.each(data.response.groups[0].items, function(index, item) {
+                    me.createMarker(me.map, {lat: item.venue.location.lat, lng: item.venue.location.lng}, item.venue.name)
                 });
+            }).error(function() {
+
+            });
         },
 
-        nearByCallback: function(results, status) {
-            var infoWindow = new google.maps.InfoWindow();
-            var me = this;
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
+        createMarker: function(map, place, title, infoWindow) {
 
-                    var place = results[i];
-                    console.log(place);
-                    me.createMarker(results[i], me.map, infoWindow);
-                }
-            } else {
-                console.log('Error getting nearby:' + status);
-            }
-        },
-
-        createMarker: function(place, map, infoWindow) {
-
-                var placeLoc = place.geometry.location;
                 var marker = new google.maps.Marker({
                     map : map,
-                    position : place.geometry.location
+                    position : place,
+                    title: title
                 });
 
-                google.maps.event.addListener(marker, 'click', function() {
-                    infoWindow.setContent(place.name);
-                    infoWindow.open(map, this);
-                });
         },
 
         initMap : function() {
