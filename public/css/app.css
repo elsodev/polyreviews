@@ -79,3 +79,7 @@ footer{
     width: 400px;
     height:100%;
 }
+
+.pull-right {
+    float: right;
+}
