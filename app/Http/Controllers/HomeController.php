@@ -34,7 +34,7 @@ class HomeController extends Controller
             ]);
 
         $content = $response->getBody()->getContents();
-
+        
         return $content;
     }
     

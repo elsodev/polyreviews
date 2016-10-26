@@ -40,7 +40,7 @@
 
 
 <footer>
-    &copy; {{ date('Y') }} {{ config('app.name') }}
+    &copy; {{ date('Y') }} {{ config('app.name') }} | Data provided by <a href="http://foursquare.com">Foursquare</a>
 </footer>
 
 </html>

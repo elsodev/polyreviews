@@ -18,6 +18,7 @@ var infoPopUp = {
         this.$el.html(msg);
         this.$el.animate({bottom: '50px'}, this.defaultSpeed);
 
+        // auto hide
         window.setTimeout(function() {
            this.hide()
         }.bind(this), this.waitingTime);
@@ -51,12 +52,30 @@ var main = new Vue({
         getNearby: function()
         {
             var me = this;
+            var infowindow;
 
             $.ajax({
                url: site.url + '/getStartingPins', dataType: 'json', type: 'get'
             }).success(function(data) {
+
+                // get places
                 $.each(data.response.groups[0].items, function(index, item) {
-                    me.createMarker(me.map, {lat: item.venue.location.lat, lng: item.venue.location.lng}, item.venue.name)
+
+                    // get categories
+                    var categories = '';
+                    $.each(item.venue.categories, function(index, cat) {
+                         categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
+                    });
+
+                    infowindow = new google.maps.InfoWindow({
+                        content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
+                    });
+                    me.createMarker(
+                        me.map,
+                        {lat: item.venue.location.lat, lng: item.venue.location.lng},
+                        item.venue.name,
+                        infowindow
+                    )
                 });
 
                 me.isMapLoading = false;
@@ -65,13 +84,25 @@ var main = new Vue({
             });
         },
 
-        createMarker: function(map, place, title, infoWindow) {
+        createMarker: function(map, place, title, infowindow) {
 
-                var marker = new google.maps.Marker({
-                    map : map,
-                    position : place,
-                    title: title
-                });
+            var marker = new google.maps.Marker({
+                map : map,
+                position : place,
+                title: title
+            });
+
+            marker.addListener('click', function() {
+                console.log('click');
+            });
+
+            marker.addListener('mouseover', function() {
+                infowindow.open(map, marker);
+            });
+
+            marker.addListener('mouseout', function() {
+                infowindow.close();
+            });
 
         },
 
