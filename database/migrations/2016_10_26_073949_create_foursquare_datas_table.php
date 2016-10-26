@@ -18,7 +18,7 @@ class CreateFoursquareDatasTable extends Migration
             $table->integer('place_id')->unsigned();
             $table->float('ratings')->default(0);
             $table->string('obj_id');
-            $table->integer('total_checkins');
+            $table->integer('total_check_ins');
             $table->json('data');
             $table->timestamps();
             

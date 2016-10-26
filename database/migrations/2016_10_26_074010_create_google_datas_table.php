@@ -16,8 +16,10 @@ class CreateGoogleDatasTable extends Migration
         Schema::create('google_datas', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('place_id')->unsigned();
-            $table->float('ratings')->default(0);
-            $table->string('obj_id');
+            $table->string('title');
+            $table->text('description');
+            $table->string('link');
+            $table->integer('relevantOrder'); // top results
             $table->json('data');
             $table->timestamps();
 
