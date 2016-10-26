@@ -6,6 +6,7 @@
 
 @section('content')
     <div class="sixteen wide columns" id="main">
+        <div class="overlay" :class="{hideThis: !isMapLoading}"></div>
         <div id="mainMenu">
             <ul>
                 <li>
@@ -20,6 +21,8 @@
         <div id="rightPane">
 
         </div>
+
+        <div class="info success"><i class="ui check icon"></i> Something went wrong</div>
     </div>
 @endsection
 

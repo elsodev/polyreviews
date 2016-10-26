@@ -28,7 +28,7 @@ class HomeController extends Controller
         $clientId = config('app.foursquare_clientId');
         $clientSecret = config('app.foursquare_clientSecret');
         $oauth_query = '&client_id='. $clientId. '&client_secret='. $clientSecret.'&v=20161015&m=foursquare';
-        $response = $this->client->request('GET','https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000'.$oauth_query,
+        $response = $this->client->request('GET','https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food,coffee'.$oauth_query,
             [
                 'decode_content' => false
             ]);
