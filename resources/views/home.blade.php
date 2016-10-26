@@ -19,9 +19,10 @@
         </div>
         <div id="map"></div>
         <div id="rightPane">
+
             <div class="ui stackable grid">
                 <!--Primary Column-->
-                <div id="primary_col" class="ui sixteen wide column">
+                <div id="primary_col" class="ui sixteen wide column" style="position: relative;">
                     <h1>@{{ activePanel.primary.title }}</h1>
                     <p class="category"><b>@{{ activePanel.primary.categories }}</b></p>
                     <p class="address"><i class="ui location arrow icon"></i>
@@ -31,6 +32,8 @@
                         <i class="ui star icon"></i> Average Ratings
                         <div class="ui star rating" data-rating="0"></div>
                     </div>
+
+                    <div class="x hideThis" :class="{hideThis: !isRightPaneOpen}" v-on:click="closeRightPane"></div>
                 </div>
                 <!--/Primary Column-->
 

@@ -150,6 +150,12 @@ var main = new Vue({
 
         },
 
+        closeRightPane: function()
+        {
+            if(this.isRightPaneOpen) $('#rightPane').animate({'right': '-400px'}, 200);
+            this.isRightPaneOpen = false;
+        },
+
         initMap : function() {
 
             // removes all point of interest, eg. shops, restaurants icons
