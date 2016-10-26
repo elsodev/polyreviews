@@ -42,7 +42,7 @@ var main = new Vue({
     ready:function() {
         // loads google map
         this.map = this.initMap();
-        this.getNearby(map);
+        this.getNearby();
 
         infoPopUp.show('a', 'test');
     },
@@ -52,7 +52,6 @@ var main = new Vue({
         getNearby: function()
         {
             var me = this;
-            var infowindow;
 
             $.ajax({
                url: site.url + '/getStartingPins', dataType: 'json', type: 'get'
@@ -66,15 +65,16 @@ var main = new Vue({
                     $.each(item.venue.categories, function(index, cat) {
                          categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
                     });
-
-                    infowindow = new google.maps.InfoWindow({
-                        content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
-                    });
+                    
+                    // create a marker on map
                     me.createMarker(
                         me.map,
                         {lat: item.venue.location.lat, lng: item.venue.location.lng},
                         item.venue.name,
-                        infowindow
+                        new google.maps.InfoWindow({
+                            content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
+                        }),
+                        item
                     )
                 });
 
@@ -84,7 +84,7 @@ var main = new Vue({
             });
         },
 
-        createMarker: function(map, place, title, infowindow) {
+        createMarker: function(map, place, title, infowindow, data) {
 
             var marker = new google.maps.Marker({
                 map : map,
@@ -92,8 +92,11 @@ var main = new Vue({
                 title: title
             });
 
+            marker.data = data;
+
             marker.addListener('click', function() {
-                console.log('click');
+                infowindow.open(map, marker);
+                console.log(marker.data);
             });
 
             marker.addListener('mouseover', function() {

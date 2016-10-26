@@ -19,7 +19,24 @@
         </div>
         <div id="map"></div>
         <div id="rightPane">
+            <div class="ui stackable grid">
+                <div id="primary_col" class="ui sixteen wide column">
+                    <h1>Somewhere</h1>
+                    <h4 class="category"> Japanese</h4>
+                    <div class="address"><i class="ui location arrow icon"></i> Somehwere</div>
+                </div>
+                <div id="foursquare_col" class="ui sixteen wide column">
+                    <i class="ui foursquare icon"></i> From Forsquare
+                </div>
+                <div id="facebook_col" class="ui sixteen wide column">
+                    <i class="ui facebook icon"></i> From Facebook
 
+                </div>
+                <div id="google_col" class="ui sixteen wide column">
+                    <i class="ui google icon"></i> From Google
+
+                </div>
+            </div>
         </div>
 
         <div class="info success"><i class="ui check icon"></i> Something went wrong</div>
