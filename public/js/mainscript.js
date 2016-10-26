@@ -34,9 +34,28 @@ var infoPopUp = {
 var main = new Vue({
     el: '#main',
     data: {
+        isRightPaneOpen: false,
         isMapLoading: true,
         searchInput : '',
-        map : null
+        map : null,
+
+        activePanel: {
+            primary: {
+                title: '',
+                categories: '',
+                avg_ratings: 0,
+                isLoading: true
+            },
+            fsq: {
+                isLoading: true
+            },
+            fb: {
+                isLoading: true
+            },
+            g: {
+                isLoading: true
+            }
+        }
     },
     
     ready:function() {
@@ -96,8 +115,8 @@ var main = new Vue({
 
             marker.addListener('click', function() {
                 infowindow.open(map, marker);
-                console.log(marker.data);
-            });
+                this.openRightPane(marker.data); // load it with fsq data
+            }.bind(this));
 
             marker.addListener('mouseover', function() {
                 infowindow.open(map, marker);
@@ -106,6 +125,28 @@ var main = new Vue({
             marker.addListener('mouseout', function() {
                 infowindow.close();
             });
+
+        },
+
+        openRightPane: function(data)
+        {
+            var $rightPane = $('#rightPane');
+            if(!this.isRightPaneOpen) $rightPane.animate({'right': '0'}, 300);
+
+            this.isRightPaneOpen = true;
+
+            // convert categories into string
+            var categories = '';
+            $.each(data.venue.categories, function(index, cat) {
+                categories += cat.name + ((data.venue.categories.length < (index+1)) ? ', ' : '');
+            });
+
+            // set data to active panel(rightpane)
+            this.activePanel.primary = {
+                title : data.venue.name,
+                categories: categories,
+                address: data.venue.location.formattedAddress.join(", ")
+            }
 
         },
 
@@ -134,6 +175,7 @@ var main = new Vue({
                 },
                 styles: noPoi
             });
-        }
+        },
+
     }
 });

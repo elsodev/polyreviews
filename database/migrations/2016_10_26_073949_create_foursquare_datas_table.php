@@ -19,7 +19,11 @@ class CreateFoursquareDatasTable extends Migration
             $table->float('ratings')->default(0);
             $table->string('obj_id');
             $table->integer('total_checkins');
+            $table->json('data');
             $table->timestamps();
+            
+            $table->foreign('place_id')->references('id')
+                ->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,6 +34,6 @@ class CreateFoursquareDatasTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('foursquare_datas');
     }
 }

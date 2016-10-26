@@ -150,7 +150,7 @@ Right Panel
     overflow-y:auto;
     padding: 5px;
     position:fixed;
-    right:0px;
+    right:-400px;
     top:0;
     width: 400px;
     height:100%;
@@ -190,5 +190,11 @@ Right Panel
 #main #rightPane #google_col{
 
     border-radius: 3px;
-    background: rgba(194, 234, 154, 0.4);
+    background: rgba(194, 234, 154, 0.8);
+}
+
+#main #rightPane .column .loadingIcon {
+    color:#242424;
+    text-align: center;
+    font-size: 0.9em;
 }
