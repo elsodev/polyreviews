@@ -12,10 +12,6 @@
 */
 
 Auth::routes();
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::group(['middleware' => 'auth'], function(){
-    Route::get('/', 'HomeController@index');
-    Route::get('/home', 'HomeController@index');
-    Route::get('/getStartingPins', 'HomeController@getStartingPins');
-});
+Route::get('/', 'HomeController@index');
+Route::get('/getStartingPins', 'HomeController@getStartingPins');

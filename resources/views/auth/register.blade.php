@@ -1,82 +1,84 @@
-@extends('layouts.app')
+@extends('master')
+
+@section('title')
+    Register
+@endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
-                        {{ csrf_field() }}
+<div class="ui grid">
+    <div class="ui computer only six wide column"></div>
+    <div class="ui sixteen wide mobile four wide computer column">
+        <div class="ui row mt20 mb15">
+            <h2 class="ui header centered">
+                Polyreview Register
+            </h2>
+        </div>
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Name</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
+        <div class="ui row">
+            <div class="ui raised segment">
+                <form class="ui form warning" role="form" method="POST" action="{{ url('/register') }}">
+                    {{ csrf_field() }}
+                    @if( $errors->has('name') || $errors->has('password') || $errors->has('email') || $errors->has('password_confirmation'))
+                        <div class="ui warning message">
+                            <ul class="list">
+                                @if($errors->has('email'))
+                                    <li>{{ $errors->first('email') }}</li>
                                 @endif
-                            </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
+                                @if( $errors->has('name'))
+                                    <li>{{ $errors->first('name') }}</li>
                                 @endif
-                            </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
+                                @if( $errors->has('password') )
+                                    <li>{{ $errors->first('password') }}</li>
                                 @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
 
                                 @if ($errors->has('password_confirmation'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                    </span>
+                                    <li>{{ $errors->first('password_confirmation') }}</li>
                                 @endif
-                            </div>
+                            </ul>
                         </div>
+                    @endif
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Register
-                                </button>
-                            </div>
+                    <!-- Name -->
+                    <div class="field">
+                        <div class="ui right labeled left icon input">
+                            <i class="user icon"></i>
+                            <input id="name" type="text" placeholder="Name" name="name" required autofocus>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <!-- Email -->
+                    <div class="field">
+                        <div class="ui right labeled left icon input">
+                            <i class="mail outline icon"></i>
+                            <input id="email" type="email" placeholder="Email Address" name="email" required>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="field">
+                        <div class="ui right labeled left icon input">
+                            <i class="key icon"></i>
+                            <input id="password" type="password" placeholder="Password" name="password" required>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="field">
+                        <div class="ui right labeled left icon input">
+                            <i class="key icon"></i>
+                            <input id="password-confirm" type="password" placeholder="Confirm Password" name="password_confirmation" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <input type="submit" class="ui button green" value="Register">
+                    </div>
+                </form>
             </div>
         </div>
+
     </div>
 </div>
+
 @endsection
