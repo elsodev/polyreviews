@@ -18,6 +18,7 @@ var infoPopUp = {
         this.$el.html(msg);
         this.$el.animate({bottom: '50px'}, this.defaultSpeed);
 
+        // auto hide
         window.setTimeout(function() {
            this.hide()
         }.bind(this), this.waitingTime);
@@ -33,15 +34,34 @@ var infoPopUp = {
 var main = new Vue({
     el: '#main',
     data: {
+        isRightPaneOpen: false,
         isMapLoading: true,
         searchInput : '',
-        map : null
+        map : null,
+
+        activePanel: {
+            primary: {
+                title: '',
+                categories: '',
+                avg_ratings: 0,
+                isLoading: true
+            },
+            fsq: {
+                isLoading: true
+            },
+            fb: {
+                isLoading: true
+            },
+            g: {
+                isLoading: true
+            }
+        }
     },
     
     ready:function() {
         // loads google map
         this.map = this.initMap();
-        this.getNearby(map);
+        this.getNearby();
 
         infoPopUp.show('a', 'test');
     },
@@ -55,8 +75,26 @@ var main = new Vue({
             $.ajax({
                url: site.url + '/getStartingPins', dataType: 'json', type: 'get'
             }).success(function(data) {
+
+                // get places
                 $.each(data.response.groups[0].items, function(index, item) {
-                    me.createMarker(me.map, {lat: item.venue.location.lat, lng: item.venue.location.lng}, item.venue.name)
+
+                    // get categories
+                    var categories = '';
+                    $.each(item.venue.categories, function(index, cat) {
+                         categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
+                    });
+                    
+                    // create a marker on map
+                    me.createMarker(
+                        me.map,
+                        {lat: item.venue.location.lat, lng: item.venue.location.lng},
+                        item.venue.name,
+                        new google.maps.InfoWindow({
+                            content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
+                        }),
+                        item
+                    )
                 });
 
                 me.isMapLoading = false;
@@ -65,14 +103,57 @@ var main = new Vue({
             });
         },
 
-        createMarker: function(map, place, title, infoWindow) {
+        createMarker: function(map, place, title, infowindow, data) {
 
-                var marker = new google.maps.Marker({
-                    map : map,
-                    position : place,
-                    title: title
-                });
+            var marker = new google.maps.Marker({
+                map : map,
+                position : place,
+                title: title
+            });
 
+            marker.data = data;
+
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+                this.openRightPane(marker.data); // load it with fsq data
+            }.bind(this));
+
+            marker.addListener('mouseover', function() {
+                infowindow.open(map, marker);
+            });
+
+            marker.addListener('mouseout', function() {
+                infowindow.close();
+            });
+
+        },
+
+        openRightPane: function(data)
+        {
+            var $rightPane = $('#rightPane');
+            if(!this.isRightPaneOpen) $rightPane.animate({'right': '0'}, 300);
+
+            this.isRightPaneOpen = true;
+
+            // convert categories into string
+            var categories = '';
+            $.each(data.venue.categories, function(index, cat) {
+                categories += cat.name + ((data.venue.categories.length < (index+1)) ? ', ' : '');
+            });
+
+            // set data to active panel(rightpane)
+            this.activePanel.primary = {
+                title : data.venue.name,
+                categories: categories,
+                address: data.venue.location.formattedAddress.join(", ")
+            }
+
+        },
+
+        closeRightPane: function()
+        {
+            if(this.isRightPaneOpen) $('#rightPane').animate({'right': '-400px'}, 200);
+            this.isRightPaneOpen = false;
         },
 
         initMap : function() {
@@ -100,6 +181,7 @@ var main = new Vue({
                 },
                 styles: noPoi
             });
-        }
+        },
+
     }
 });
