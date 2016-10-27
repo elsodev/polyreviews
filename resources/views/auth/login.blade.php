@@ -8,7 +8,7 @@
     <div class="ui grid">
         <div class="ui computer only six wide column"></div>
         <div class="ui sixteen wide mobile four wide computer column">
-            <div class="ui row" style="margin-top: 20px; margin-bottom: 15px;">
+            <div class="ui row mt20 mb15">
                 <h2 class="ui header centered">Polyreview Login</h2>
             </div>
             <div class="ui row">
@@ -49,11 +49,14 @@
                                     <input type="checkbox" tabindex="0" class="hidden" name="remember">
                                     <label>Remember Me</label>
                                 </div>
-                                <a href="{{ url('/password/reset') }}" class="pull-right">Forgot Password?</a>
                             </div>
 
                             <div class="field">
                                 <input type="submit" class="ui green button" value="Login"/>
+
+                                <div style="float: right;">
+                                    <a href="{{ url('/register') }}">Register an Account</a>
+                                </div>
                             </div>
 
                         </form>
