@@ -36,6 +36,7 @@
 <script src="{{ asset('semantic-ui/semantic.min.js') }}"></script>
 
 <script src="{{ asset('js/app.js') }}"></script>
+
 @yield('scripts')
 
 

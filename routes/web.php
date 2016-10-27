@@ -15,3 +15,4 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index');
 Route::get('/getStartingPins', 'HomeController@getStartingPins');
+Route::post('/sync', 'DataController@sync');
