@@ -16,9 +16,9 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function __construct(Client $client)
+    public function __construct()
     {
-        $this->client = $client;
+        $this->client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false)));
     }
     
     public function getStartingPins()
