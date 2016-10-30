@@ -46,7 +46,7 @@
 
                             <div class="field clearfix">
                                 <div class="ui checkbox">
-                                    <input type="checkbox" tabindex="0" class="hidden" name="remember">
+                                    <input type="checkbox" tabindex="0" class="" name="remember">
                                     <label>Remember Me</label>
                                 </div>
                             </div>

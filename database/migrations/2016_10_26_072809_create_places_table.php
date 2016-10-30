@@ -15,8 +15,9 @@ class CreatePlacesTable extends Migration
     {
         Schema::create('places', function(Blueprint $table) {
             $table->increments('id');
-            $table->float('lng');
-            $table->float('lat');
+            $table->decimal('lng', 10, 7);
+            $table->decimal('lat', 10, 7);
+            $table->integer('neighbourhood_id')->unsigned()->nullable();
             $table->string('name');
             $table->text('address')->nullable();
             $table->text('description')->nullable();
@@ -24,6 +25,11 @@ class CreatePlacesTable extends Migration
             $table->float('avg_ratings')->default(0);
             $table->timestamp('last_fetch');
             $table->timestamps();
+
+
+            $table->foreign('neighbourhood_id')
+                ->references('id')->on('neighbourhoods')
+                ->onDelete('SET NULL');
         });
     }
 

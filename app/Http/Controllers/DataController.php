@@ -30,16 +30,28 @@ class DataController extends Controller
                 'last_fetch' => \Carbon\Carbon::now()->toDateTimeString()
             ]);
 
-            // check category exists or not
-            foreach($data['venue']['location']['categories'] as $category)
+            // create categories
+            foreach($data['venue']['categories'] as $category)
             {
-                $dbCategory = Category::where('name', $category);
+                $dbCategory = Category::where('name', $category['name'])->exists();
+                if(!$dbCategory) {
+                    $newCategory = Category::create([
+                        'name' => $category['name']
+                    ]);
+
+                    $newPlace->categories()->attach($newCategory->id);
+                }
 
             }
         } else {
-
+            // already exists in database
+            // update category
+            
         }
-        $data['venue']['id'];
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 
 
