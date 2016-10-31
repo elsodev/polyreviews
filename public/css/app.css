@@ -16,6 +16,11 @@ footer{
     right:0;
 }
 
+small{
+    color:#242424;
+    font-size: 0.9em;
+}
+
 /*
 Helpers
 */
@@ -261,6 +266,10 @@ Right Panel
     color:#242424;
     text-align: center;
     font-size: 0.9em;
+}
+
+#main #rightPane .pricing i.icon {
+    margin: 0!important;;
 }
 
 .pull-right {

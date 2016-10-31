@@ -63,6 +63,37 @@
                 <div id="foursquare_col" class="ui sixteen wide column">
                     <i class="ui foursquare icon"></i> From Forsquare
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.fsq.isLoading}"></i>
+
+                    <div class="ui relaxed list">
+                        <div class="item">
+                            <div class="content">
+                                <div class="data_ratings hideThis" :class="{hideThis: activePanel.fsq.isLoading}">
+                                    Ratings
+                                    <div class="ui star rating" data-rating="0"></div>
+                                    <small>@{{ activePanel.fsq.no_of_ratings }} ratings</small>
+                                </div>
+                            </div>
+                        </div><!-- /Ratings-->
+
+                        <div class="item">
+                            <div class="content">
+                                Price <span class="pricing" v-html="activePanel.fsq.price"></span>
+                            </div>
+                        </div><!-- /Price -->
+
+                        <div class="item">
+                            <div class="content">
+                                <a :href="activePanel.fsq.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis: activePanel.fsq.isLoading}">
+                                    View In Foursquare&nbsp;&nbsp;<i class="ui external icon"></i>
+                                </a>
+                            </div>
+
+                        </div><!-- /View button-->
+
+                    </div>
+
+
+
                 </div>
                 <!--/Foursquare Column-->
 
@@ -71,6 +102,10 @@
                     <i class="ui facebook icon"></i> From Facebook
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
 
+                    <a :href="activePanel.fb.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.fb.isLoading}">
+                        View In Facebook&nbsp;&nbsp;<i class="ui external icon"></i>
+                    </a>
+
                 </div>
                 <!--/Facebook Column-->
 
@@ -78,6 +113,9 @@
                 <div id="google_col" class="ui sixteen wide column">
                     <i class="ui google icon"></i> From Google
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.g.isLoading}"></i>
+                    <a :href="activePanel.g.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.g.isLoading}">
+                        View In Google&nbsp;&nbsp;<i class="ui external icon"></i>
+                    </a>
 
                 </div>
                 <!--/Google Column-->
@@ -97,8 +135,11 @@
         $('.avg_ratings .rating')
                 .rating({
                     initialRating: 0,
-                    maxRating: 5
+                    maxRating: 5,
+                    interactive: false
                 });
+
+        $('.data_ratings .rating').rating({maxRating: 5, interactive: false});
 
         $('.popMe')
                 .popup({

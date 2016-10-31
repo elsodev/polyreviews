@@ -13,7 +13,6 @@ ajax = function(url, data, method, dataType) {
 };
 
 ajaxPostJson = function(url, data) {
-    console.log('post json');
     data = typeof data === 'undefined' ? {} : data;
     return ajax(url, data, 'post', 'json');
 };

@@ -2,6 +2,7 @@
 var main = new Vue({
     el: '#main',
     data: {
+        fsq_domain: 'https://foursquare.com/v/',
         isRightPaneOpen: false,
         isMapLoading: true,
         searchInput : '',
@@ -27,7 +28,7 @@ var main = new Vue({
     },
     
     ready:function() {
-        // loads google map
+        // loads google mapa
         this.map = this.initMap();
         this.getNearby();
     },
@@ -109,8 +110,30 @@ var main = new Vue({
             this.activePanel.primary = {
                 title : data.venue.name,
                 categories: categories,
-                address: data.venue.location.formattedAddress.join(", ")
+                address: data.venue.location.formattedAddress.join(", "),
             };
+
+            // FOURSQUARE ----------------
+            var fsq_rating =  Math.round((data.venue.rating / 10) * 5)
+            var price = '';
+            for(var i = 0; i < data.venue.price.tier; i++) {
+                price += '<i class="ui dollar small icon"></i>';
+            }
+            price += '&nbsp;' + data.venue.price.message;
+
+            this.activePanel.fsq = {
+                isLoading: false,
+                link: this.fsq_domain + data.venue.id,
+                ratings: fsq_rating,
+                no_of_ratings: data.venue.ratingSignals,
+                price: price
+            };
+
+            $('#foursquare_col .data_ratings .rating').rating('set rating', fsq_rating);
+
+            // FB ----------------
+
+            // GOOGLE ----------------
 
             // sync with server, cache the data
             ajaxPostJson('/sync', {fsq: data})

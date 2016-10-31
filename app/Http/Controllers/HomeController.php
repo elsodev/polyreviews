@@ -34,7 +34,12 @@ class HomeController extends Controller
         $this->oauthQuery =  '&client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
 
     }
-    
+
+    /**
+     * Get Starting Pins based on default coordinates
+     *
+     * @return string   JSON
+     */
     public function getStartingPins()
     {
         $longitude = config('app.locations.default_center.lng');
