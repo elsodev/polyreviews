@@ -1,3 +1,9 @@
+var slider_arrows = {
+        //  Unslider default behaviour
+        prev: '<a class="unslider-arrow prev"><i class="ui chevron left icon"></i></a>',
+        next: '<a class="unslider-arrow next"><i class="ui chevron right icon"></i></a>',
+};
+
 
 var main = new Vue({
     el: '#main',
@@ -93,6 +99,11 @@ var main = new Vue({
 
         },
 
+        /**
+         * Opens up Right Panel (Important Func)
+         *
+         * @param data  foursquare results' item data object
+         */
         openRightPane: function(data)
         {
             var $rightPane = $('#rightPane');
@@ -126,8 +137,11 @@ var main = new Vue({
                 link: this.fsq_domain + data.venue.id,
                 ratings: fsq_rating,
                 no_of_ratings: data.venue.ratingSignals,
-                price: price
+                price: price,
+                tips: data.tips
             };
+
+            $('.tipSlide').unslider({arrows: slider_arrows});
 
             $('#foursquare_col .data_ratings .rating').rating('set rating', fsq_rating);
 

@@ -285,3 +285,26 @@ Right Panel
     margin-bottom: 15px;
 }
 
+ul.unslider-horizontal li {
+    width: 90%;
+    margin: 10px auto;
+
+}
+
+.unslider .unslider-arrow {
+    position: absolute;
+    overflow: hidden;
+    display: block;
+    top: 60%;
+    left: auto;
+    cursor: pointer;
+}
+
+
+.unslider .next {
+    right: 5px;
+}
+
+.unslider .prev {
+    left: 5px;
+}

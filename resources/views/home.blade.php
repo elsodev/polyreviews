@@ -68,7 +68,7 @@
                         <div class="item">
                             <div class="content">
                                 <div class="data_ratings hideThis" :class="{hideThis: activePanel.fsq.isLoading}">
-                                    Ratings
+                                    <b>Ratings</b>
                                     <div class="ui star rating" data-rating="0"></div>
                                     <small>@{{ activePanel.fsq.no_of_ratings }} ratings</small>
                                 </div>
@@ -77,9 +77,22 @@
 
                         <div class="item">
                             <div class="content">
-                                Price <span class="pricing" v-html="activePanel.fsq.price"></span>
+                                <b>Price</b> <span class="pricing" v-html="activePanel.fsq.price"></span>
                             </div>
                         </div><!-- /Price -->
+
+                        <div class="item">
+                            <div class="content">
+                                <b>Tips</b>
+                                <ul class="tipSlide">
+                                    <li v-for="tip in activePanel.fsq.tips">
+                                        <a :href="tip.canonicalUrl" target="_blank">
+                                            @{{ tip.user.firstName }} says "@{{ tip.text }}"
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 
                         <div class="item">
                             <div class="content">
@@ -87,7 +100,6 @@
                                     View In Foursquare&nbsp;&nbsp;<i class="ui external icon"></i>
                                 </a>
                             </div>
-
                         </div><!-- /View button-->
 
                     </div>

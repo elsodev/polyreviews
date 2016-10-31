@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{{ asset('semantic-ui/semantic.min.css') }}"/>
     <link type="text/css" rel="stylesheet" href="{{  asset('css/app.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ asset('js/unslider/dist/css/unslider.css') }}"/>
     <meta name="_token" content="{!! csrf_token() !!}"/>
 
     @yield('head')
@@ -34,7 +35,7 @@
 <script src="{{ asset('js/xss.min.js') }}"></script>
 <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ asset('semantic-ui/semantic.min.js') }}"></script>
-
+<script src="{{ asset('js/unslider/dist/js/unslider-min.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 
 @yield('scripts')
