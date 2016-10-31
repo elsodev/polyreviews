@@ -15,8 +15,8 @@ class CreatePlacesTable extends Migration
     {
         Schema::create('places', function(Blueprint $table) {
             $table->increments('id');
-            $table->decimal('lng', 10, 7);
-            $table->decimal('lat', 10, 7);
+            $table->string('lng');
+            $table->string('lat');
             $table->integer('neighbourhood_id')->unsigned()->nullable();
             $table->string('name');
             $table->text('address')->nullable();

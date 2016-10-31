@@ -15,9 +15,11 @@ class DataController extends Controller
         // checks DB if foursquare data is already in db
         $data = $request->input('fsq');
 
+
         $place = Place::where('lng', $data['venue']['location']['lng'])
             ->where('lat', $data['venue']['location']['lat'])
             ->first();
+
 
         if(!$place) {
             // does not exists, create this place
@@ -46,7 +48,7 @@ class DataController extends Controller
         } else {
             // already exists in database
             // update category
-            
+
         }
 
         return response()->json([

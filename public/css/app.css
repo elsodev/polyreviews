@@ -73,6 +73,14 @@ Helpers
     transform-origin: center;
 }
 
+.dropdown .text{
+    padding:10px 5px 10px 5px;
+}
+
+.ui.selection.dropdown>.delete.icon, .ui.selection.dropdown>.dropdown.icon, .ui.selection.dropdown>.search.icon {
+    top: 20px;
+}
+
 /*
 Main
 */
@@ -136,9 +144,9 @@ Main menu
 */
 
 #main #mainMenu {
-    width:600px;
-    left:50px;
-    top: 5px;
+    width:auto;
+    left:10px;
+    top: 10px;
     position:fixed;
     height: 60px;
     background:rgba(255, 255, 255, 0.8);
@@ -167,7 +175,7 @@ Main menu
 }
 
 
-#main #mainMenu ul li .search{
+#main #mainMenu ul li .searchBox{
     display: block;
     background-color:rgba(255,255,255,0.8);
     color:#000;
@@ -176,7 +184,15 @@ Main menu
     padding-left:15px;
     border-left: 1px solid #eee;
     border-right: 1px solid #eee;
-    width: 300px;
+    width: 220px;
+}
+
+#main #mainMenu .search{
+    border-radius: 0px;
+    height:58px;
+    padding-left:15px;
+    border:none;
+    border-right: 1px solid #eee;
 }
 
 #main #mainMenu .siteLogo{

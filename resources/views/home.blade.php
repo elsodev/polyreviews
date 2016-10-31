@@ -13,8 +13,30 @@
                     <a href="#" class="siteLogo">{{ config('app.name') }}</a>
                 </li>
                 <li>
-                    <input type="text" class="search" placeholder="Find a Restaurant" v-model="searchInput"/>
+                    <input type="text" class="searchBox" placeholder="Find a Restaurant" v-model="searchInput"/>
                 </li>
+
+                <li style="max-width: 200px">
+                    <select class="ui search dropdown" id="hood_dropdown" style="max-width: 200px;">
+                        @foreach($areas as $area)
+                            <optgroup label="{{ $area->name }}">
+                                @foreach($area->neighbourhoods as $hood)
+                                    <option value="{{ $hood->name }}">{{ $hood->name }} {{ ($hood->other_name) ? '- '.$hood->other_name : '' }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
+                </li>
+                @if(count($categories) > 0)
+                <li  style="max-width: 200px">
+                    <select class="ui search dropdown" id="category_dropdown" style="max-width: 200px;">
+                        <option value="all">All</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                @endif
             </ul>
         </div>
         <div id="map"></div>
@@ -85,5 +107,18 @@
                     position   : 'top center',
                 })
         ;
+        $('#hood_dropdown').dropdown({
+            maxSelections: 1,
+            metadata : {
+                placeholderText : 'Neighbourhood',
+            }
+        });
+
+        $('#category_dropdown').dropdown({
+            maxSelections: 1,
+            metadata : {
+                placeholderText : 'Categories',
+            }
+        });
     </script>
 @endsection

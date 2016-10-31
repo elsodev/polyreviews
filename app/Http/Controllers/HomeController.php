@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Area;
+use App\Category;
+use App\Neighbourhood;
+use App\Place;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -13,7 +17,13 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home');
+        // get neighbourhood data
+        // default to subang jaya for testing
+        $areas = Area::where('name', 'Subang Jaya')->with('neighbourhoods')->get();
+        $categories = Category::orderBy('name')->get();
+
+        return view('home')->with('areas', $areas)
+            ->with('categories', $categories);
     }
 
     public function __construct()
@@ -37,6 +47,16 @@ class HomeController extends Controller
         $content = $response->getBody()->getContents();
         
         return $content;
+    }
+
+
+    public function filterByCategory(Requests\FilterByCategoryRequest $request)
+    {
+        $places = Place::with(['categories' => function($q) use ($request) {
+            $q->where('name', $request->input('category'));
+        }])->get();
+        
+        dd($places);
     }
     
     

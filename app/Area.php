@@ -20,4 +20,10 @@ class Area extends Model
         return $this->belongsTo(State::class);
     }
     
+    
+    public function neighbourhoods()
+    {
+        return $this->hasMany(\App\Neighbourhood::class);
+    }
+    
 }

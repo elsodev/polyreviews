@@ -8,7 +8,7 @@ class Neighbourhood extends Model
 {
     protected $table = 'neighbourhoods';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'other_name'];
 
     /**
      * A neighbourhood belongs to An Area
