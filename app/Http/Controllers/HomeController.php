@@ -13,7 +13,7 @@ use GuzzleHttp\Client;
 
 class HomeController extends Controller
 {
-    protected $client;
+    protected $client, $clientID, $clientSecret, $oauthQuery;
 
     public function index()
     {
@@ -29,17 +29,18 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false)));
+        $this->clientID = config('app.foursquare_clientId');
+        $this->clientSecret = config('app.foursquare_clientSecret');
+        $this->oauthQuery =  '&client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
+
     }
     
     public function getStartingPins()
     {
         $longitude = config('app.locations.default_center.lng');
         $latitude = config('app.locations.default_center.lat');
-        $clientId = config('app.foursquare_clientId');
-        $clientSecret = config('app.foursquare_clientSecret');
-        $oauth_query = '&client_id='. $clientId. '&client_secret='. $clientSecret.'&v=20161015&m=foursquare';
         $response = $this->client->request('GET',
-            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food,'.$oauth_query,
+            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food'.$this->oauthQuery,
             [
                 'decode_content' => false
             ]);
@@ -50,13 +51,31 @@ class HomeController extends Controller
     }
 
 
-    public function filterByCategory(Requests\FilterByCategoryRequest $request)
+    public function filter(Requests\FilterRequest $request)
     {
-        $places = Place::with(['categories' => function($q) use ($request) {
-            $q->where('name', $request->input('category'));
-        }])->get();
-        
-        dd($places);
+        // center point of filter
+        $longitude = $request->input('centerLong');
+        $latitude = $request->input('centerLat');
+
+        // set forusquare api query parameter
+        $query = '&query=';
+        if($request->input('search')) {
+            $query .= $request->input('search');
+        } else if($request->input('category') && $request->input('category') != 'all') {
+            $query .= $request->input('category');
+        } else {
+            $query = '';
+        }
+
+        $response = $this->client->request('GET',
+            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food'.$query.$this->oauthQuery,
+            [
+                'decode_content' => false
+            ]);
+
+        $content = $response->getBody()->getContents();
+
+        return $content;
     }
     
     
