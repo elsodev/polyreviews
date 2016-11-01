@@ -34,6 +34,7 @@ Helpers
 }
 
 .x {
+    z-index:999;
     display: block;
     position: fixed;
     right: 0px;

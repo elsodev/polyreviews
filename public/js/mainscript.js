@@ -160,6 +160,7 @@ var main = new Vue({
 
                     } else {
                         // get google data
+                        me.activePanel.g.isLoading = true;
                         ajaxGetJson('/get/google', {place_id: syncData.place_id, query : googleQuery})
                             .success(function(data) {
                                 me._loadGoogleData(data, googleQuery);
