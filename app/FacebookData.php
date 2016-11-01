@@ -20,4 +20,15 @@ class FacebookData extends Model
     {
         return $this->belongsTo(\App\Place::class);
     }
+
+    /**
+     * A FacebookData has many Votes(polymorphic)
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function votes()
+    {
+        return $this->morphMany(\App\Vote::class, 'obj');
+    }
+
 }

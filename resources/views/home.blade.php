@@ -97,7 +97,7 @@
                         <div class="item">
                             <div class="content">
                                 <a :href="activePanel.fsq.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis: activePanel.fsq.isLoading}">
-                                    View In Foursquare&nbsp;&nbsp;<i class="ui external icon"></i>
+                                    View on Foursquare&nbsp;&nbsp;<i class="ui external icon"></i>
                                 </a>
                             </div>
                         </div><!-- /View button-->
@@ -115,7 +115,7 @@
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
 
                     <a :href="activePanel.fb.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.fb.isLoading}">
-                        View In Facebook&nbsp;&nbsp;<i class="ui external icon"></i>
+                        View on Facebook&nbsp;&nbsp;<i class="ui external icon"></i>
                     </a>
 
                 </div>
@@ -126,7 +126,7 @@
                     <i class="ui google icon"></i> From Google
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.g.isLoading}"></i>
                     <a :href="activePanel.g.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.g.isLoading}">
-                        View In Google&nbsp;&nbsp;<i class="ui external icon"></i>
+                        View on Google&nbsp;&nbsp;<i class="ui external icon"></i>
                     </a>
 
                 </div>

@@ -14,6 +14,8 @@ class DataController extends Controller
     {
         // checks DB if foursquare data is already in db
         $data = $request->input('fsq');
+        $googleData = null;
+        $facebookData = null;
 
 
         $place = Place::where('lng', $data['venue']['location']['lng'])
@@ -47,12 +49,21 @@ class DataController extends Controller
             }
         } else {
             // already exists in database
-            // update category
+            $place->update([
+                'name' => $data['venue']['name'],
+                'address' => json_encode($data['venue']['location']['formattedAddress']),
+            ]);
+
+            // check whether google data exists
 
         }
 
+        
+
         return response()->json([
-            'success' => true
+            'success' => true,
+            'googleData' => $googleData,
+            'facebookData' => $facebookData
         ]);
     }
 

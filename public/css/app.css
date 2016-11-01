@@ -213,6 +213,7 @@ Main menu
 Right Panel
 */
 #main #rightPane {
+    z-index:100;
     border-left:1px solid #eee;
     background:rgba(255, 255, 255, 0.9);
     overflow-x:hidden;
@@ -307,4 +308,8 @@ ul.unslider-horizontal li {
 
 .unslider .prev {
     left: 5px;
+}
+
+.unslider-arrow.next{
+    right: 5px;
 }
