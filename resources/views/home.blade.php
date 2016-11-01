@@ -123,11 +123,29 @@
 
                 <!--Google Column-->
                 <div id="google_col" class="ui sixteen wide column">
+
                     <i class="ui google icon"></i> From Google
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.g.isLoading}"></i>
-                    <a :href="activePanel.g.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.g.isLoading}">
-                        View on Google&nbsp;&nbsp;<i class="ui external icon"></i>
-                    </a>
+                    <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.g.isLoading}">
+                        <div class="item" v-for="item in activePanel.g.results">
+                            <div class="content">
+                                <a :href="item.link" target="_blank">
+                                    <b>@{{ item.title }}</b><br>
+                                    <small>@{{ item.description }}</small>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="content">
+                                <a :href="activePanel.g.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.g.isLoading}">
+                                    View on Google&nbsp;&nbsp;<i class="ui external icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                 </div>
                 <!--/Google Column-->

@@ -106,6 +106,7 @@ var main = new Vue({
          */
         openRightPane: function(data)
         {
+            var me = this;
             var $rightPane = $('#rightPane');
             if(!this.isRightPaneOpen) $rightPane.animate({'right': '0'}, 300);
 
@@ -144,14 +145,29 @@ var main = new Vue({
             $('.tipSlide').unslider({arrows: slider_arrows});
 
             $('#foursquare_col .data_ratings .rating').rating('set rating', fsq_rating);
-
-            // FB ----------------
-
-            // GOOGLE ----------------
-
+            
             // sync with server, cache the data
             ajaxPostJson('/sync', {fsq: data})
-                .success(function() {
+                .success(function(syncData) {
+                    
+                    // GOOGLE -----------------------------
+                    // generate query Resturant Location review
+                    var googleQuery = data.venue.name + ' ' + data.venue.location.formattedAddress[1] + ' review';
+
+                    if(syncData.google != null) {
+                        // display
+                        me._loadGoogleData(syncData.google, googleQuery);
+
+                    } else {
+                        // get google data
+                        ajaxGetJson('/get/google', {place_id: syncData.place_id, query : googleQuery})
+                            .success(function(data) {
+                                me._loadGoogleData(data, googleQuery);
+                            })
+                            .error(function() {
+                                infoPopUp.show('error', 'Unable to obtain Google data, try again later');
+                            })
+                    }
 
                 }).error(function() {
                     infoPopUp.show('error', 'Something went wrong while syncing data to server');
@@ -191,6 +207,16 @@ var main = new Vue({
                 styles: noPoi
             });
         },
+
+
+        _loadGoogleData: function(data, query)
+        {
+            this.activePanel.g = {
+                link: 'https://www.google.com/search?q=' + encodeURIComponent(query),
+                isLoading: false,
+                results : data
+            };
+        }
 
     }
 });

@@ -23,7 +23,7 @@ class CreateFoursquareDatasTable extends Migration
             $table->timestamps();
             
             $table->foreign('place_id')->references('id')
-                ->on('users')->onDelete('cascade');
+                ->on('places')->onDelete('cascade');
         });
     }
 

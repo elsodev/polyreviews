@@ -20,11 +20,10 @@ class CreateGoogleDatasTable extends Migration
             $table->text('description');
             $table->string('link');
             $table->integer('relevantOrder'); // top results
-            $table->json('data');
             $table->timestamps();
 
             $table->foreign('place_id')->references('id')
-                ->on('users')->onDelete('cascade');
+                ->on('places')->onDelete('cascade');
         });
     }
 

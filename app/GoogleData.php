@@ -8,7 +8,7 @@ class GoogleData extends Model
 {
     protected $table = 'google_datas';
     protected $fillable = [
-        'place_id', 'title', 'description', 'link', 'relevantOrder', 'data'
+        'place_id', 'title', 'description', 'link', 'relevantOrder'
     ];
 
     /**

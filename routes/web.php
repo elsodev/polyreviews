@@ -19,6 +19,8 @@ Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 Route::get('/getStartingPins', 'HomeController@getStartingPins');
 Route::post('/sync', 'DataController@sync');
+Route::get('/get/google', 'DataController@getGoogleData');
+
 
 Route::group(['middleware' => 'auth'], function(){
 });

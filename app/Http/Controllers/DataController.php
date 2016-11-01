@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\FacebookData;
+use App\GoogleData;
 use App\Place;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,7 @@ class DataController extends Controller
             ->where('lat', $data['venue']['location']['lat'])
             ->first();
 
+        $newPlace = null;
 
         if(!$place) {
             // does not exists, create this place
@@ -55,16 +58,88 @@ class DataController extends Controller
             ]);
 
             // check whether google data exists
+            $dbGoogleData = GoogleData::where('place_id', $place->id)->orderBy('relevantOrder', 'asc')->get();
+            $dbFacebookData = FacebookData::where('place_id', $place->id)->first();
+
+            // only format data if true(exists)
+            if($dbGoogleData) $googleData = $this->formatGoogleData($dbGoogleData);
+            if($dbFacebookData) $facebookData = $this->formatFacebookData($dbFacebookData);
 
         }
 
-        
-
         return response()->json([
             'success' => true,
-            'googleData' => $googleData,
-            'facebookData' => $facebookData
+            'place_id' => (!$place) ? $newPlace->id : $place->id,
+            'google' => $googleData,
+            'facebook' => $facebookData
         ]);
+    }
+
+
+    public function getGoogleData(Requests\GetDataRequest $request)
+    {
+        $query = $request->input('query');
+        $place_id = $request->input('place_id');
+        
+        $scrapper = new ScrapperController();
+        
+        $results = $scrapper->scrapGoogle($query)->getItems();
+
+        $data = [];
+
+        if(count($results) > 0) {
+
+            $count  = 0;
+
+            foreach ($results as $result) {
+                if($count > 5) break;
+                $newGoogleData = GoogleData::create([
+                    'place_id' => $place_id,
+                    'title' => $result->getDataValue('title'),
+                    'link' => $result->getDataValue('url'),
+                    'description' => $result->getDataValue('description'),
+                    'relevantOrder' => $result->getOnPagePosition(),
+                ]);
+
+                array_push($data, $newGoogleData);
+                $count++;
+            }
+        }
+
+        return $this->formatGoogleData($data);
+    }
+
+    public function getFacebookData(Requests\GetDataRequest $request)
+    {
+
+    }
+
+    private function formatFacebookData($data)
+    {
+
+    }
+
+
+    private function formatGoogleData($data)
+    {
+        $results = [];
+
+        if(count($data) > 0) {
+
+            foreach ($data as $item) {
+                array_push($results, [
+                        'id' => $item->id,
+                        'title' => $item->title,
+                        'link' => $item->link,
+                        'description' => $item->description,
+                        'relevantOrder' => $item->relevantOrder,
+                    ]
+                );
+
+            }
+        }
+
+        return $results;
     }
 
 
