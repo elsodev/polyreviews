@@ -111,6 +111,7 @@
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
 
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
+                        <p v-if="activePanel.fb.data.length <=0">No results found on Facebook</p>
                         <div class="item" v-for="item in activePanel.fb.data" :data-id="item.id">
                             <div class="item content">
                                     <a :href="item.link" target="_blank">
