@@ -109,6 +109,7 @@
                 <div id="facebook_col" class="ui sixteen wide column">
                     <i class="ui facebook icon"></i> From Facebook
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
+                    <p class="hideThis" :class="{hideThis: activePanel.fb.isLoading}"><small>Results are ranked by Ratings</small></p>
 
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
                         <p v-if="activePanel.fb.data.length <=0">No results found on Facebook</p>
