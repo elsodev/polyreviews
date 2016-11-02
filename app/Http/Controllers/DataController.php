@@ -6,9 +6,11 @@ use App\Category;
 use App\FacebookData;
 use App\GoogleData;
 use App\Place;
+use App\Vote;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class DataController extends Controller
 {
@@ -180,6 +182,35 @@ class DataController extends Controller
     }
 
     /**
+     * @param Requests\VoteRequest $request
+     */
+    public function vote(Requests\VoteRequest $request)
+    {
+        $obj_type = '';
+        if($request->input('type') == 'foursquare') {
+            $obj_type = 'App\FoursquareData';
+        } else if($request->input('type') == 'google') {
+            $obj_type = 'App\GoogleData';
+        } else if($request->input('type') == 'facebook') {
+            $obj_type = 'App\FacebookData';
+        } else {
+            $obj_type = 'ERROR';
+        }
+
+        $newVote = Vote::create([
+            'user_id' => Auth::id(),
+            'obj_type' => $obj_type,
+            'obj_id' => $request->input('id'),
+            'vote_type' => $request->input('vote_type')
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $newVote
+        ]);
+    }
+
+    /**
      * Format Facebook Data for Javascript Consumption
      *
      * @param $data
@@ -244,6 +275,8 @@ class DataController extends Controller
 
         return $results;
     }
+
+
 
 
 }

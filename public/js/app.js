@@ -54,6 +54,9 @@ var infoPopUp = {
     }
 };
 
+/**
+ * Source: https://gist.github.com/chrisveness/bcb00eb717e6382c5608
+ */
 function utf8Decode(utf8String) {
     if (typeof utf8String != 'string') throw new TypeError('parameter ‘utf8String’ is not a string');
     // note: decode 3-byte chars first as decoded 2-byte strings could appear to be 3-byte char!

@@ -244,5 +244,16 @@ var main = new Vue({
                 results : data
             };
         },
+        
+        
+        voteUp: function(type, index)
+        {
+            
+        },
+        
+        voteDown: function(type, index)
+        {
+            
+        }
     }
 });

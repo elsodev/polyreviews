@@ -24,4 +24,5 @@ Route::get('/get/facebook', 'DataController@getFacebookData');
 
 
 Route::group(['middleware' => 'auth'], function(){
+    Route::post('vote', 'DataController@vote');
 });

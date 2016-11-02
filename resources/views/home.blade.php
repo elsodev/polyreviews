@@ -139,12 +139,17 @@
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.g.isLoading}">
                         <p v-if="activePanel.g.results.length <=0"><i class="ui frown icon"></i> No results found on Google</p>
 
-                        <div class="item" v-for="item in activePanel.g.results">
+                        <div class="item" v-for="item in activePanel.g.results" style="position: relative">
                             <div class="content">
                                 <a :href="item.link" target="_blank">
                                     <b>@{{ item.title | decodeUTF8 }}</b><br>
                                     <small>@{{ item.description | decodeUTF8}}</small>
                                 </a>
+                            </div>
+
+                            <div class="voting">
+                                <a href="#" class="voteUp"><i class="ui arrow up icon"></i> <span class="voteNum">99</span></a>
+                                <a href="#" class="voteDown"><i class="ui arrow down icon"></i> <span class="voteNum">99</span></a>
                             </div>
                         </div>
 
@@ -165,6 +170,19 @@
         </div>
 
         <div class="info success"><i class="ui check icon"></i> Something went wrong</div>
+
+        @if(!Auth::guest())
+        <div id="user_info">
+            <i class="ui user icon"></i> {{ Auth::user()->name }}
+            <a href="{{ url('/logout') }}" class="ui mini basic button">Log Out</a>
+        </div>
+        @else
+            <div id="user_info">
+                <a href="{{ url('/login') }}" class="ui mini basic button">Log In</a> or
+                <a href="{{ url('/register') }}" class="ui mini basic button">Register</a>
+
+            </div>
+        @endif
     </div>
 @endsection
 

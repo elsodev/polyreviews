@@ -240,6 +240,27 @@ Right Panel
 
 }
 
+#main #user_info{
+    position: fixed;
+    top: 80px;
+    left: 15px;
+    background: rgba(255,255,255,0.5);
+    border:1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    color: #242424;
+    font-size: 0.9em;
+    transition: background 0.5s ease;
+}
+
+#main #user_info:hover{
+    background: rgba(255,255,255,1);
+}
+
+#main #user_info .icon {
+    font-size: 1.2em;
+}
+
 #main #rightPane .column {
     margin-bottom: 5px;
     padding: 10px;
@@ -274,6 +295,24 @@ Right Panel
     margin: 0!important;;
 }
 
+#main #rightPane .voting {
+    margin: 3px;
+    float:right;
+    display: block;
+    font-size:0.9em;
+}
+
+#main #rightPane .voting a:hover{
+    color:#ff0000;
+}
+
+#main #rightPane .voting .icon{
+    margin:0;
+}
+
+
+
+
 .pull-right {
     float: right;
 }
@@ -285,32 +324,4 @@ Right Panel
 
 .mb15 {
     margin-bottom: 15px;
-}
-
-ul.unslider-horizontal li {
-    width: 90%;
-    margin: 10px auto;
-
-}
-
-.unslider .unslider-arrow {
-    position: absolute;
-    overflow: hidden;
-    display: block;
-    top: 60%;
-    left: auto;
-    cursor: pointer;
-}
-
-
-.unslider .next {
-    right: 5px;
-}
-
-.unslider .prev {
-    left: 5px;
-}
-
-.unslider-arrow.next{
-    right: 5px;
 }
