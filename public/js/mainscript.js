@@ -244,16 +244,40 @@ var main = new Vue({
                 results : data
             };
         },
-        
-        
-        voteUp: function(type, index)
+
+        /**
+         * Up Vote and Down Vote
+         *
+         * @param type
+         * @param id
+         * @param vote_type
+         * @param $index
+         */
+        vote: function(type, id, vote_type, $index)
         {
-            
-        },
-        
-        voteDown: function(type, index)
-        {
-            
+            console.log(type, id, vote_type);
+
+            var me = this;
+
+            ajaxPostJson('/vote', {type: type, id: id, vote_type: vote_type})
+                .success(function(data) {
+
+                    if(data.success) {
+
+                        if (vote_type = 1) { // upvote
+                            me.activePanel.g.results.$set($index, {upVotes : me.activePanel.g.results[$index].upVotes++});
+                        } else if(vote_type == 0){ // downvote
+                            me.activePanel.g.results.$set($index, {upVotes : me.activePanel.g.results[$index].downVotes++});
+                        } else {
+                            // error
+                        }
+                    }
+
+                })
+                .error(function() {
+                     infoPopUp.show('error', 'Please <a href="'+ site.url +'/login">log in</a> to vote')
+                });
         }
+
     }
 });
