@@ -197,16 +197,25 @@ class DataController extends Controller
             $obj_type = 'ERROR';
         }
 
-        $newVote = Vote::create([
-            'user_id' => Auth::id(),
-            'obj_type' => $obj_type,
-            'obj_id' => $request->input('id'),
-            'vote_type' => $request->input('vote_type')
-        ]);
+        // make sure user have not voted before, avoid duplicates
+        $vote = Vote::where('user_id', Auth::id())
+            ->where('obj_type', $obj_type)
+            ->where('obj_id', $request->input('id'))
+            ->where('vote_type', $request->input('vote_type'))
+            ->get();
+
+        if(count($vote) <= 0) {
+            $vote = Vote::create([
+                'user_id' => Auth::id(),
+                'obj_type' => $obj_type,
+                'obj_id' => $request->input('id'),
+                'vote_type' => $request->input('vote_type')
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'data' => $newVote
+            'data' => $vote
         ]);
     }
 
@@ -237,6 +246,10 @@ class DataController extends Controller
                         'description' => (isset($decoded->about)) ? $decoded->about: 'No description available' ,
                         'check_ins' => (isset($decoded->checkins)) ? $decoded->checkins: 0,
                         'price_range' => (isset($decoded->price_range)) ? $decoded->price_range: 'No price range available',
+                        'userUpVoted' => false,
+                        'userDownVoted' => false,
+                        'upVotes' => 0,
+                        'downVotes' => 0,
                     ]
                 );
 
@@ -267,6 +280,10 @@ class DataController extends Controller
                         'link' => $item->link,
                         'description' => $item->description,
                         'relevantOrder' => $item->relevantOrder,
+                        'userUpVoted' => false,
+                        'userDownVoted' => false,
+                        'upVotes' => 0,
+                        'downVotes' => 0,
                     ]
                 );
 

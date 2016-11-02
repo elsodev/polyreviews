@@ -148,8 +148,13 @@
                             </div>
 
                             <div class="voting">
-                                <a href="#" class="voteUp"><i class="ui arrow up icon"></i> <span class="voteNum">99</span></a>
-                                <a href="#" class="voteDown"><i class="ui arrow down icon"></i> <span class="voteNum">99</span></a>
+                                <a href="#" class="voteUp" v-on:click="vote('google', item.id, 1, $index)">
+                                    <i class="ui arrow up icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ item.upVotes }}</span>
+                                </a>
+
+                                <a href="#" class="voteDown" v-on:click="vote('google', item.id, 0, $index)">
+                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ item.downVotes }}</span>
+                                </a>
                             </div>
                         </div>
 
