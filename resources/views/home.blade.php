@@ -83,14 +83,10 @@
 
                         <div class="item">
                             <div class="content">
-                                <b>Tips</b>
-                                <ul class="tipSlide">
-                                    <li v-for="tip in activePanel.fsq.tips">
-                                        <a :href="tip.canonicalUrl" target="_blank">
-                                            @{{ tip.user.firstName }} says "@{{ tip.text }}"
-                                        </a>
-                                    </li>
-                                </ul>
+                                <b>Top Tip</b>
+                                <p><a :href="activePanel.fsq.tips[0].canonicalUrl" target="_blank">
+                                    @{{ activePanel.fsq.tips[0].user.firstName }} says "@{{ activePanel.fsq.tips[0].text }}"
+                                </a></p>
                             </div>
                         </div>
 
