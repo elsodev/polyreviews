@@ -112,7 +112,7 @@
                     <p class="hideThis" :class="{hideThis: activePanel.fb.isLoading}"><small>Results are ranked by Ratings</small></p>
 
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
-                        <p v-if="activePanel.fb.data.length <=0">No results found on Facebook</p>
+                        <p v-if="activePanel.fb.data.length <=0"><i class="ui frown icon"></i> No results found on Facebook</p>
                         <div class="item" v-for="item in activePanel.fb.data" :data-id="item.id">
                             <div class="item content">
                                     <a :href="item.link" target="_blank">
@@ -135,12 +135,15 @@
 
                     <i class="ui google icon"></i> From Google
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.g.isLoading}"></i>
+
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.g.isLoading}">
+                        <p v-if="activePanel.g.results.length <=0"><i class="ui frown icon"></i> No results found on Google</p>
+
                         <div class="item" v-for="item in activePanel.g.results">
                             <div class="content">
                                 <a :href="item.link" target="_blank">
-                                    <b>@{{ item.title }}</b><br>
-                                    <small>@{{ item.description }}</small>
+                                    <b>@{{ item.title | decodeUTF8 }}</b><br>
+                                    <small>@{{ item.description | decodeUTF8}}</small>
                                 </a>
                             </div>
                         </div>

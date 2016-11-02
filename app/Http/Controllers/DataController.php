@@ -111,9 +111,9 @@ class DataController extends Controller
                 if($count >= 5) break;
                 $newGoogleData = GoogleData::create([
                     'place_id' => $place_id,
-                    'title' => base64_encode($result->getDataValue('title')),
-                    'link' => $result->getDataValue('url'),
-                    'description' => base64_encode($result->getDataValue('description')),
+                    'title' => utf8_encode($result->getDataValue('title')),
+                    'link' => str_replace("/url?q=", "", $result->getDataValue('url')),
+                    'description' => utf8_encode($result->getDataValue('description')),
                     'relevantOrder' => $result->getOnPagePosition(),
                 ]);
 
@@ -232,9 +232,9 @@ class DataController extends Controller
             foreach ($data as $item) {
                 array_push($results, [
                         'id' => $item->id,
-                        'title' => utf8_encode(base64_decode($item->title)),
+                        'title' => $item->title,
                         'link' => $item->link,
-                        'description' => utf8_encode(base64_decode($item->description)),
+                        'description' => $item->description,
                         'relevantOrder' => $item->relevantOrder,
                     ]
                 );
