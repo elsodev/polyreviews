@@ -20,18 +20,9 @@ class LoginTest extends TestCase
      */
     public function testPostLoginSuccess()
     {
-        // uncomment this for the first time, to create the first login
-        /*
-        factory(App\User::class)->create([
-            'name' => 'kcrene',
-            'email' => 'cwxorochi@gmail.com',
-            'password' => bcrypt('kurtcwx1995')
-        ]);
-        */
-
         $this->visit('/login')
-            ->type('cwxorochi@gmail.com', 'email')
-            ->type('kurtcwx1995', 'password')
+            ->type('homestead@gmail.com', 'email')
+            ->type('secret', 'password')
             ->check('remember')
             ->press('Login')
             ->seePageIs('/');
@@ -44,7 +35,7 @@ class LoginTest extends TestCase
     {
         $this->visit('/login')
             ->type('bla@gmail.com', 'email')
-            ->type('secret', 'password')
+            ->type('bla', 'password')
             ->press('Login')
             ->seePageIs('/login')
             ->see('warning message');

@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-
+        factory(App\User::class)->create([
+            'name' => 'polytester',
+            'email' => 'homestead@gmail.com',
+            'password' => bcrypt('secret')
+        ]);
     }
 }
