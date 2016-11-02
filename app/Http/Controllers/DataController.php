@@ -12,6 +12,19 @@ use App\Http\Requests;
 
 class DataController extends Controller
 {
+    protected $scrapper;
+    
+    public function __construct()
+    {
+        $this->scrapper = new ScrapperController();
+    }
+
+    /**
+     * Create/Update places,categories based on Forusquare data
+     *
+     * @param Requests\SyncRequest $request
+     * @return mixed
+     */
     public function sync(Requests\SyncRequest $request)
     {
         // checks DB if foursquare data is already in db
@@ -59,11 +72,11 @@ class DataController extends Controller
 
             // check whether google data exists
             $dbGoogleData = GoogleData::where('place_id', $place->id)->orderBy('relevantOrder', 'asc')->get();
-            $dbFacebookData = FacebookData::where('place_id', $place->id)->first();
+            $dbFacebookData = FacebookData::where('place_id', $place->id)->orderBy('ratings', 'desc')->get();
 
             // only format data if true(exists)
-            if($dbGoogleData) $googleData = $this->formatGoogleData($dbGoogleData);
-            if($dbFacebookData) $facebookData = $this->formatFacebookData($dbFacebookData);
+            if(count($dbGoogleData) > 0) $googleData = $this->formatGoogleData($dbGoogleData);
+            if(count($dbFacebookData) > 0) $facebookData = $this->formatFacebookData($dbFacebookData);
 
         }
 
@@ -76,14 +89,17 @@ class DataController extends Controller
     }
 
 
+    /**
+     * @param Requests\GetDataRequest $request
+     * @return array
+     */
     public function getGoogleData(Requests\GetDataRequest $request)
     {
         $query = $request->input('query');
         $place_id = $request->input('place_id');
         
-        $scrapper = new ScrapperController();
-        
-        $results = $scrapper->scrapGoogle($query)->getItems();
+
+        $results = $this->scrapper->scrapGoogle($query)->getItems();
 
         $data = [];
 
@@ -92,7 +108,7 @@ class DataController extends Controller
             $count  = 0;
 
             foreach ($results as $result) {
-                if($count > 5) break;
+                if($count >= 5) break;
                 $newGoogleData = GoogleData::create([
                     'place_id' => $place_id,
                     'title' => $result->getDataValue('title'),
@@ -109,17 +125,104 @@ class DataController extends Controller
         return $this->formatGoogleData($data);
     }
 
+    /**
+     * @param Requests\GetDataRequest $request
+     * @return array
+     */
     public function getFacebookData(Requests\GetDataRequest $request)
     {
+        $responses = $this->scrapper->scrapFacebook($request->input('query'));
+        $place_id = $request->input('place_id');
+
+        $data = [];
+        if(count($responses['data']) > 0) {
+
+            $count = 0;
+
+            foreach($responses['data'] as $response) {
+                if($count >= 5) break;
+                $place =  $this->scrapper->getFacebookData($response['id']);
+                $fbData = FacebookData::where('obj_id', $response['id'])->first();
+
+                if(!$fbData) {
+
+                    // create new data
+                    $newFbData = FacebookData::create([
+                        'place_id' => $place_id,
+                        'ratings' => $place['overall_star_rating'],
+                        'obj_id' => $place['id'],
+                        'data' => json_encode($place)
+                    ]);
+
+                    array_push($data, $newFbData);
+
+                } else {
+
+                    // update data
+                    $fbData->update([
+                        'place_id' => $place_id,
+                        'ratings' => $place['overall_star_rating'],
+                        'obj_id' => $place['id'],
+                        'data' => json_encode($place)
+                    ]);
+
+                    array_push($data, $fbData);
+
+                }
+
+                $count++;
+            }
+
+        }
+
+        return $this->formatFacebookData($data);
 
     }
 
+    /**
+     * Format Facebook Data for Javascript Consumption
+     *
+     * @param $data
+     * @return array
+     */
     private function formatFacebookData($data)
     {
 
+        $results = [];
+
+        if(count($data) > 0) {
+
+            foreach ($data as $item) {
+
+                $decoded = json_decode($item->data);
+
+                array_push($results, [
+                        'id' => $item->id,
+                        'name' => $decoded->name,
+                        'ratings' => $item->ratings,
+                        'rating_count' => (isset($decoded->rating_count))? $decoded->rating_count: 0,
+                        'were_here_count' => (isset($decoded->were_here_count)) ? $decoded->were_here_count : 0,
+                        'link' => 'https://facebook.com/'.$decoded->id,
+                        'description' => (isset($decoded->about)) ? $decoded->about: 'No description available' ,
+                        'check_ins' => (isset($decoded->checkins)) ? $decoded->checkins: 0,
+                        'price_range' => (isset($decoded->price_range)) ? $decoded->price_range: 'No price range available',
+                    ]
+                );
+
+            }
+        }
+
+        return $results;
+
     }
 
 
+    /**
+     * Formats Google Data for Javascript Consumption
+     *
+     * @param $data
+     * @return array
+     */
     private function formatGoogleData($data)
     {
         $results = [];

@@ -43,7 +43,7 @@
         <div id="rightPane">
 
             <div class="ui stackable grid">
-                <!--Primary Column-->
+                <!-----------------Primary Column----------------------->
                 <div id="primary_col" class="ui sixteen wide column" style="position: relative;">
                     <h1>@{{ activePanel.primary.title }}</h1>
                     <p class="category"><b>@{{ activePanel.primary.categories }}</b></p>
@@ -59,7 +59,7 @@
                 </div>
                 <!--/Primary Column-->
 
-                <!--Foursquare Column-->
+                <!-----------------Foursquare Column-------------------->
                 <div id="foursquare_col" class="ui sixteen wide column">
                     <i class="ui foursquare icon"></i> From Forsquare
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.fsq.isLoading}"></i>
@@ -109,19 +109,30 @@
                 </div>
                 <!--/Foursquare Column-->
 
-                <!--Facebook Column-->
+                <!-----------------Facebook Column----------------->
                 <div id="facebook_col" class="ui sixteen wide column">
                     <i class="ui facebook icon"></i> From Facebook
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
 
-                    <a :href="activePanel.fb.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.fb.isLoading}">
-                        View on Facebook&nbsp;&nbsp;<i class="ui external icon"></i>
-                    </a>
+                    <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
+                        <div class="item" v-for="item in activePanel.fb.data" :data-id="item.id">
+                            <div class="item content">
+                                    <a :href="item.link" target="_blank">
+                                        <p><b>@{{ item.name }}</b></p>
+                                    </a>
+                                    <small><i class="ui star icon"></i> <b>@{{ item.ratings }} / 5</b>, @{{ item.rating_count }} ratings</small>
+                                    <br>
+                                    <small><i class="ui dollar icon"></i> @{{ item.price_range }}</small><br>
+                                    <small><i class="ui user icon"></i> @{{ item.were_here_count }} people were here</small><br>
+                                    <br><p><i class="ui info circle icon"></i> @{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!--/Facebook Column-->
 
-                <!--Google Column-->
+                <!-----------------Google Column-------------------->
                 <div id="google_col" class="ui sixteen wide column">
 
                     <i class="ui google icon"></i> From Google

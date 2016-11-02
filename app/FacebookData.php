@@ -11,6 +11,10 @@ class FacebookData extends Model
         'place_id', 'ratings', 'obj_id', 'data' 
     ];
 
+    protected $casts = [
+        'data' => 'object'
+    ];
+
     /**
      * A FacebookData belongs to a Place
      * 

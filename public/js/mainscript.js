@@ -112,6 +112,11 @@ var main = new Vue({
 
             this.isRightPaneOpen = true;
 
+            // make sure each time set all loading to true first
+            me.activePanel.fsq.isLoading = true;
+            me.activePanel.g.isLoading = true;
+            me.activePanel.fb.isLoading = true;
+
             // convert categories into string
             var categories = '';
             $.each(data.venue.categories, function(index, cat) {
@@ -125,7 +130,7 @@ var main = new Vue({
                 address: data.venue.location.formattedAddress.join(", "),
             };
 
-            // FOURSQUARE ----------------
+            // -------------------FOURSQUARE ----------------
             var fsq_rating =  Math.round((data.venue.rating / 10) * 5)
             var price = '';
             for(var i = 0; i < data.venue.price.tier; i++) {
@@ -149,26 +154,56 @@ var main = new Vue({
             // sync with server, cache the data
             ajaxPostJson('/sync', {fsq: data})
                 .success(function(syncData) {
-                    
-                    // GOOGLE -----------------------------
-                    // generate query Resturant Location review
-                    var googleQuery = data.venue.name + ' ' + data.venue.location.formattedAddress[1] + ' review';
+                    var query;
+
+                    //----------------------- GOOGLE -----------------------------
+
+                    // LFC ss15/4c review
+                    query = data.venue.name + ' ' + data.venue.location.formattedAddress[0] + ' review';
 
                     if(syncData.google != null) {
                         // display
-                        me._loadGoogleData(syncData.google, googleQuery);
+                        me._loadGoogleData(syncData.google, query);
 
                     } else {
                         // get google data
-                        me.activePanel.g.isLoading = true;
-                        ajaxGetJson('/get/google', {place_id: syncData.place_id, query : googleQuery})
+                        ajaxGetJson('/get/google', {place_id: syncData.place_id, query : query})
                             .success(function(data) {
-                                me._loadGoogleData(data, googleQuery);
+                                me._loadGoogleData(data, query);
                             })
                             .error(function() {
                                 infoPopUp.show('error', 'Unable to obtain Google data, try again later');
                             })
                     }
+
+                    // ----------------------- FACEBOOK -------------------------------
+                    query = data.venue.name + ' ' + data.venue.location.formattedAddress[1].replace(/[0-9]/g, '');
+
+                    if(syncData.facebook != null) {
+
+                        me.activePanel.fb = {
+                            isLoading: false,
+                            data: syncData.facebook
+                        };
+
+
+                    } else {
+                        // get facbeook data
+                        ajaxGetJson('/get/facebook', {place_id: syncData.place_id, query : query})
+                            .success(function(data) {
+                                
+                                me.activePanel.fb = {
+                                    isLoading: false,
+                                    data: data
+                                };
+
+                            })
+                            .error(function() {
+                                infoPopUp.show('error', 'Unable to obtain Facebook data, try again later')
+                            });
+                    }
+                    
+                    
 
                 }).error(function() {
                     infoPopUp.show('error', 'Something went wrong while syncing data to server');
@@ -217,7 +252,6 @@ var main = new Vue({
                 isLoading: false,
                 results : data
             };
-        }
-
+        },
     }
 });

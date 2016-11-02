@@ -14,11 +14,13 @@ class ScrapperController extends Controller
     // for scrapper to identify itself as a browser
     private $default_user_agent = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36";
 
-    private $fbToken;
+    private $fb, $fbToken;
 
     public function __construct()
     {
         $this->fbToken = config('laravel-facebook-sdk.facebook_config.app_id').'|'.config('laravel-facebook-sdk.facebook_config.app_secret');
+        $this->fb = App::make('SammyK\LaravelFacebookSdk\LaravelFacebookSdk');
+
     }
 
     public function scrapGoogle($keyword)
@@ -29,6 +31,11 @@ class ScrapperController extends Controller
         // Tell the client to use a user agent
         $userAgent = $this->default_user_agent;
         $googleClient->request->setUserAgent($userAgent);
+
+
+        $keyword =  preg_replace('/[^\00-\255]+/u', '', $keyword); // remove non english word
+        $keyword = preg_replace('/[^A-Za-z0-9\-]/', '', $keyword); // Removes special chars.
+
 
         // Create the url that will be parsed
         $googleUrl = new GoogleUrl();
@@ -45,11 +52,11 @@ class ScrapperController extends Controller
     public function scrapFacebook($keyword)
     {
 
-        $fb = App::make('SammyK\LaravelFacebookSdk\LaravelFacebookSdk');
+        $keyword =  preg_replace('/[^\00-\255]+/u', '', $keyword); // remove non english word
+        $keyword = preg_replace('/[^A-Za-z0-9\-]/', '', $keyword); // Removes special chars.
 
         try {
-            $responses = $fb->get('/search?q='.$keyword.'&type=place&access_token='.$this->fbToken)->getDecodedBody();
-            return $responses;
+            return $this->fb->get('/search?q='.$keyword.'&type=place&access_token='.$this->fbToken)->getDecodedBody();
 
         } catch(FacebookSDKException $e) {
             dd($e->getMessage());
@@ -58,19 +65,20 @@ class ScrapperController extends Controller
         return null;
     }
 
-    public function getFacebookData($places)
+    public function getFacebookData($placeID)
     {
-        $fb = App::make('SammyK\LaravelFacebookSdk\LaravelFacebookSdk');
+        $fields = 'name,overall_star_rating,rating_count,about,category,checkins,price_range,website,were_here_count';
 
-        // obtain all info about the location
-        foreach($places as $place) {
-            try{
-                $response = $fb->get('/'.$place['id'].'?access_token='.$this->fbToken.'&fields=id,name,location')->getDecodedBody();
-            } catch(FacebookSDKException $e) {
-                dd($e->getMessage());
-            }
-
+        try {
+            return $this->fb->get(
+                '/'.$placeID.'?access_token='.$this->fbToken.'&fields='.$fields
+            )->getDecodedBody();
+        } catch(FacebookSDKException $e)
+        {
+            dd($e->getMessage());
         }
+        
+
     }
 
 }
