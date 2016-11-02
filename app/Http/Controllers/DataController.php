@@ -113,7 +113,7 @@ class DataController extends Controller
                     'place_id' => $place_id,
                     'title' => base64_encode($result->getDataValue('title')),
                     'link' => $result->getDataValue('url'),
-                    'description' => $result->getDataValue('description'),
+                    'description' => base64_encode($result->getDataValue('description')),
                     'relevantOrder' => $result->getOnPagePosition(),
                 ]);
 
@@ -234,7 +234,7 @@ class DataController extends Controller
                         'id' => $item->id,
                         'title' => utf8_encode(base64_decode($item->title)),
                         'link' => $item->link,
-                        'description' => $item->description,
+                        'description' => utf8_encode(base64_decode($item->description)),
                         'relevantOrder' => $item->relevantOrder,
                     ]
                 );
