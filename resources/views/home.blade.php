@@ -43,7 +43,7 @@
         <div id="rightPane">
 
             <div class="ui stackable grid">
-                <!--Primary Column-->
+                <!-----------------Primary Column----------------------->
                 <div id="primary_col" class="ui sixteen wide column" style="position: relative;">
                     <h1>@{{ activePanel.primary.title }}</h1>
                     <p class="category"><b>@{{ activePanel.primary.categories }}</b></p>
@@ -59,7 +59,7 @@
                 </div>
                 <!--/Primary Column-->
 
-                <!--Foursquare Column-->
+                <!-----------------Foursquare Column-------------------->
                 <div id="foursquare_col" class="ui sixteen wide column">
                     <i class="ui foursquare icon"></i> From Forsquare
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.fsq.isLoading}"></i>
@@ -83,14 +83,10 @@
 
                         <div class="item">
                             <div class="content">
-                                <b>Tips</b>
-                                <ul class="tipSlide">
-                                    <li v-for="tip in activePanel.fsq.tips">
-                                        <a :href="tip.canonicalUrl" target="_blank">
-                                            @{{ tip.user.firstName }} says "@{{ tip.text }}"
-                                        </a>
-                                    </li>
-                                </ul>
+                                <b>Top Tip</b>
+                                <p><a :href="activePanel.fsq.tips[0].canonicalUrl" target="_blank">
+                                    @{{ activePanel.fsq.tips[0].user.firstName }} says "@{{ activePanel.fsq.tips[0].text }}"
+                                </a></p>
                             </div>
                         </div>
 
@@ -109,30 +105,51 @@
                 </div>
                 <!--/Foursquare Column-->
 
-                <!--Facebook Column-->
+                <!-----------------Facebook Column----------------->
                 <div id="facebook_col" class="ui sixteen wide column">
                     <i class="ui facebook icon"></i> From Facebook
                     <i title="Loading" class="hideThis loadingIcon ui circle notched loading icon" :class="{hideThis: !activePanel.fb.isLoading}"></i>
+                    <p class="hideThis" :class="{hideThis: activePanel.fb.isLoading}"><small>Results are ranked by Ratings</small></p>
 
-                    <a :href="activePanel.fb.link" target="_blank" class="ui icon small fluid basic button hideThis" :class="{hideThis : activePanel.fb.isLoading}">
-                        View on Facebook&nbsp;&nbsp;<i class="ui external icon"></i>
-                    </a>
+                    <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
+                        <p v-if="activePanel.fb.data.length <=0"><i class="ui frown icon"></i> No results found on Facebook</p>
+                        <div class="item" v-for="item in activePanel.fb.data" :data-id="item.id">
+                            <div class="item content">
+                                    <a :href="item.link" target="_blank">
+                                        <p><b>@{{ item.name }}</b></p>
+                                    </a>
+                                    <small><i class="ui star icon"></i> <b>@{{ item.ratings }} / 5</b>, @{{ item.rating_count }} ratings</small>
+                                    <br>
+                                    <small><i class="ui dollar icon"></i> @{{ item.price_range }}</small><br>
+                                    <small><i class="ui user icon"></i> @{{ item.were_here_count }} people were here</small><br>
+                                    <br><p><i class="ui info circle icon"></i> @{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!--/Facebook Column-->
 
-                <!--Google Column-->
+                <!-----------------Google Column-------------------->
                 <div id="google_col" class="ui sixteen wide column">
 
                     <i class="ui google icon"></i> From Google
                     <i title="Loading" class="hideThis loadingIcon ui  circle notched  loading icon" :class="{hideThis: !activePanel.g.isLoading}"></i>
+
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.g.isLoading}">
-                        <div class="item" v-for="item in activePanel.g.results">
+                        <p v-if="activePanel.g.results.length <=0"><i class="ui frown icon"></i> No results found on Google</p>
+
+                        <div class="item" v-for="item in activePanel.g.results" style="position: relative">
                             <div class="content">
                                 <a :href="item.link" target="_blank">
-                                    <b>@{{ item.title }}</b><br>
-                                    <small>@{{ item.description }}</small>
+                                    <b>@{{ item.title | decodeUTF8 }}</b><br>
+                                    <small>@{{ item.description | decodeUTF8}}</small>
                                 </a>
+                            </div>
+
+                            <div class="voting">
+                                <a href="#" class="voteUp"><i class="ui arrow up icon"></i> <span class="voteNum">99</span></a>
+                                <a href="#" class="voteDown"><i class="ui arrow down icon"></i> <span class="voteNum">99</span></a>
                             </div>
                         </div>
 
@@ -153,6 +170,19 @@
         </div>
 
         <div class="info success"><i class="ui check icon"></i> Something went wrong</div>
+
+        @if(!Auth::guest())
+        <div id="user_info">
+            <i class="ui user icon"></i> {{ Auth::user()->name }}
+            <a href="{{ url('/logout') }}" class="ui mini basic button">Log Out</a>
+        </div>
+        @else
+            <div id="user_info">
+                <a href="{{ url('/login') }}" class="ui mini basic button">Log In</a> or
+                <a href="{{ url('/register') }}" class="ui mini basic button">Register</a>
+
+            </div>
+        @endif
     </div>
 @endsection
 

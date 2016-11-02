@@ -41,9 +41,15 @@ class FacebookFetcher extends Command
         $scrapper = new ScrapperController();
         $responses = $scrapper->scrapFacebook($this->argument('keyword'));
 
+        $results = [];
         foreach($responses['data'] as $place) {
-            $this->info('Name: '.$place['name'].', ID:'.$place['id']);
+            $results[] = [
+                'page_id' => $place['id'],
+                'meta' => $scrapper->getFacebookData($place['id'])
+            ];
         }
+
+        dd($results);
 
     }
 }
