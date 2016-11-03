@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
 {
+    use Votable;
+
     protected $table = 'places';
     protected $fillable = [
         'lng', 'lat', 'name', 'address', 'description', 'contact', 'avg_rating', 'last_fetch'

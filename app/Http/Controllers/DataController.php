@@ -73,8 +73,15 @@ class DataController extends Controller
             ]);
 
             // check whether google data exists
-            $dbGoogleData = GoogleData::where('place_id', $place->id)->orderBy('relevantOrder', 'asc')->get();
-            $dbFacebookData = FacebookData::where('place_id', $place->id)->orderBy('ratings', 'desc')->get();
+            $dbGoogleData = GoogleData::where('place_id', $place->id)
+                ->with('votes', 'upVotesCount', 'downVotesCount')
+                ->orderBy('relevantOrder', 'asc')
+                ->get();
+
+            $dbFacebookData = FacebookData::where('place_id', $place->id)
+                ->with('votes', 'upVotesCount', 'downVotesCount')
+                ->orderBy('ratings', 'desc')
+                ->get();
 
             // only format data if true(exists)
             if(count($dbGoogleData) > 0) $googleData = $this->formatGoogleData($dbGoogleData);
@@ -82,9 +89,16 @@ class DataController extends Controller
 
         }
 
+        $returnPlace = ($place) ?: $newPlace;
+        $user_id = (!Auth::guest()) ? Auth::id() : false;
+
         return response()->json([
             'success' => true,
-            'place_id' => (!$place) ? $newPlace->id : $place->id,
+            'place_id' => $returnPlace->id,
+            'upVotes' => $returnPlace->upVotesCount,
+            'downVotes' => $returnPlace->downVotesCount,
+            'userUpVoted' => (!$user_id) ? false : (($returnPlace->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
+            'userDownVoted' =>  (!$user_id) ? false : (($returnPlace->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
             'google' => $googleData,
             'facebook' => $facebookData
         ]);
@@ -188,7 +202,7 @@ class DataController extends Controller
     {
         $obj_type = '';
         if($request->input('type') == 'foursquare') {
-            $obj_type = 'App\FoursquareData';
+            $obj_type = 'App\Place';
         } else if($request->input('type') == 'google') {
             $obj_type = 'App\GoogleData';
         } else if($request->input('type') == 'facebook') {
@@ -201,10 +215,22 @@ class DataController extends Controller
         $vote = Vote::where('user_id', Auth::id())
             ->where('obj_type', $obj_type)
             ->where('obj_id', $request->input('id'))
-            ->where('vote_type', $request->input('vote_type'))
-            ->get();
+            ->first();
 
-        if(count($vote) <= 0) {
+        if(count($vote) > 0 && !is_null($vote)) {
+            if($vote->vote_type != $request->input('vote_type')) {
+                // vote same post, different vote type
+                // delete old vote
+                $vote->delete();
+
+                $vote = Vote::create([
+                    'user_id' => Auth::id(),
+                    'obj_type' => $obj_type,
+                    'obj_id' => $request->input('id'),
+                    'vote_type' => $request->input('vote_type')
+                ]);
+            } 
+        } else {
             $vote = Vote::create([
                 'user_id' => Auth::id(),
                 'obj_type' => $obj_type,
@@ -212,7 +238,7 @@ class DataController extends Controller
                 'vote_type' => $request->input('vote_type')
             ]);
         }
-
+        
         return response()->json([
             'success' => true,
             'data' => $vote
@@ -229,6 +255,7 @@ class DataController extends Controller
     {
 
         $results = [];
+        $user_id = (!Auth::guest()) ? Auth::id() : false;
 
         if(count($data) > 0) {
 
@@ -246,10 +273,11 @@ class DataController extends Controller
                         'description' => (isset($decoded->about)) ? $decoded->about: 'No description available' ,
                         'check_ins' => (isset($decoded->checkins)) ? $decoded->checkins: 0,
                         'price_range' => (isset($decoded->price_range)) ? $decoded->price_range: 'No price range available',
-                        'userUpVoted' => false,
-                        'userDownVoted' => false,
-                        'upVotes' => 0,
-                        'downVotes' => 0,
+                        'userUpVoted' => (!$user_id) ? false : (($item->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
+                        'userDownVoted' =>  (!$user_id) ? false : (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
+                        'upVotes' => $item->upVotesCount,
+                        'downVotes' => $item->downVotesCount,
+                        'justVoted' => false,
                     ]
                 );
 
@@ -271,6 +299,8 @@ class DataController extends Controller
     {
         $results = [];
 
+        $user_id = (!Auth::guest()) ? Auth::id() : false;
+
         if(count($data) > 0) {
 
             foreach ($data as $item) {
@@ -280,10 +310,11 @@ class DataController extends Controller
                         'link' => $item->link,
                         'description' => $item->description,
                         'relevantOrder' => $item->relevantOrder,
-                        'userUpVoted' => false,
-                        'userDownVoted' => false,
-                        'upVotes' => 0,
-                        'downVotes' => 0,
+                        'userUpVoted' => (!$user_id) ? false : (($item->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
+                        'userDownVoted' =>  (!$user_id) ? false : (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
+                        'upVotes' => $item->upVotesCount,
+                        'downVotes' => $item->downVotesCount,
+                        'justVoted' => false,
                     ]
                 );
 
