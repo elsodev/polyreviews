@@ -90,18 +90,18 @@
                             </div>
 
 
-                            <div class="voting hideThis" :class="{hideThis: !activePanel.fsq.syncComplete}">
+                            <div class="voting hideThis" :class="{hideThis: activePanel.fsq.place_id <= 0}">
                                 <!--only show when sync complete-->
                                 <a href="#" class="voteUp"
                                    v-on:click.prevent="vote('foursquare', activePanel.fsq.id, 1, false)"
                                    :class="{voted: activePanel.fsq.userUpVoted}">
-                                    <i class="ui arrow up icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ activePanel.fsq.upVotes }}</span>
+                                    <i class="ui arrow up icon"></i> <span class="voteNum" v-if="activePanel.fsq.upVotes > 0">@{{ activePanel.fsq.upVotes }}</span>
                                 </a>
 
                                 <a href="#" class="voteDown"
                                    v-on:click.prevent="vote('foursquare', activePanel.fsq.id, 0, false)"
                                    :class="{voted: activePanel.fsq.userDownVoted}">
-                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.downVotes > 0">@{{ activePanel.fsq.downVotes }}</span>
+                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="activePanel.fsq.downVotes > 0">@{{ activePanel.fsq.downVotes }}</span>
                                 </a>
                             </div>
                         </div>

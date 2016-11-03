@@ -150,8 +150,13 @@ var main = new Vue({
             ajaxPostJson('/sync', {fsq: data})
                 .success(function(syncData) {
 
-                    // place id for foursquare data
+                    // set Foursqaure(place) sync results to local
                     me.activePanel.fsq.id = syncData.place_id;
+                    me.activePanel.fsq.upVotes = syncData.upVotes;
+                    me.activePanel.fsq.downVotes = syncData.downVotes;
+                    me.activePanel.fsq.userUpVoted = syncData.userUpVoted;
+                    me.activePanel.fsq.userDownVoted = syncData.userDownVoted;
+                    
 
                     var query;
 
