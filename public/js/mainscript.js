@@ -322,7 +322,7 @@ var main = new Vue({
 
                 })
                 .error(function() {
-                     infoPopUp.show('error', 'Please <a href="'+ site.url +'/login">log in</a> to vote')
+                     infoPopUp.show('error', 'Please <a href="'+ site.url +'/login" style="color:#fff;text-decoration: underline">log in</a> to vote')
                 });
         }
 
