@@ -131,7 +131,7 @@
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.fb.isLoading}">
                         <p v-if="activePanel.fb.data.length <=0"><i class="ui frown icon"></i> No results found on Facebook</p>
 
-                        <div class="item" v-for="item in activePanel.fb.data | orderBy 'upVotes' -1 " :data-id="item.id">
+                        <div class="item" v-for="item in activePanel.fb.data | orderBy 'upVotes' -1 " :data-id="item.id" :class="{justVoted: item.justVoted}">
                             <div class="item content">
                                     <a :href="item.link" target="_blank">
                                         <p><b>@{{ item.name }}</b></p>
@@ -172,7 +172,7 @@
                     <div class="ui relaxed divided list hideThis" :class="{hideThis: activePanel.g.isLoading}">
                         <p v-if="activePanel.g.results.length <=0"><i class="ui frown icon"></i> No results found on Google</p>
 
-                        <div class="item" v-for="item in activePanel.g.results | orderBy 'upVotes' -1 " style="position: relative">
+                        <div class="item" v-for="item in activePanel.g.results | orderBy 'upVotes' -1 " :class="{justVoted: item.justVoted}">
                             <div class="content">
                                 <a :href="item.link" target="_blank">
                                     <b>@{{ item.title | decodeUTF8 }}</b><br>

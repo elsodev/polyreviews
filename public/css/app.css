@@ -314,6 +314,14 @@ Right Panel
     color:#ff0000;
 }
 
+#main #rightPane .list .item {
+    padding: 4px;
+}
+
+
+#main #rightPane .list .justVoted{
+    background:rgba(245, 246, 206, 1);
+}
 
 
 .pull-right {

@@ -270,61 +270,75 @@ var main = new Vue({
         {
             var me = this;
 
+
             ajaxPostJson('/vote', {type: type, id: id, vote_type: vote_type})
                 .success(function(data) {
 
                     if(data.success) {
-                        
-                        var current_set;
-                        var selected;
-
-                        if(type == 'google') {
-                            current_set = me.activePanel.g.results;
-                            selected = current_set[$index];
-                        } else if(type == 'facebook') {
-                            current_set = me.activePanel.fb.data;
-                            selected = current_set[$index];
-                        } else if(type == 'foursquare') {
-                            current_set = me.activePanel.fsq; // foursquare one data only so no index
-                            selected = current_set;
-                        }
-
-
-                        if (vote_type == 1) { // UP VOTE
-
-                                selected.upVotes++;
-                                selected.userUpVoted = true;
-
-                                console.log(selected.userUpVoted);
-
-                                // since user can either upvote or downvote only(one)
-                                // so if user upvote, and if user before had downvoted, remove their downvote
-                                if(selected.userDownVoted) {
-                                    selected.downVotes--;
-                                    selected.userDownVoted = false;
-                                }
-                            
-
-                        } else if(vote_type == 0){ // DOWN VOTE
-
-                                selected.downVotes++;
-                                selected.userDownVoted = true;
-
-                                if (selected.userUpVoted) {
-                                    selected.upVotes--;
-                                    selected.userUpVoted = false;
-                                }
-                        } else {
-
-                        }
-
                     }
 
                 })
                 .error(function() {
-                     infoPopUp.show('error', 'Please <a href="'+ site.url +'/login" style="color:#fff;text-decoration: underline">log in</a> to vote')
+                    infoPopUp.show('error', 'Please <a href="'+ site.url +'/login" style="color:#fff;text-decoration: underline">log in</a> to vote')
                 });
+
+
+            var current_set;
+            var selected;
+
+            if(type == 'google') {
+                current_set = me.activePanel.g.results;
+                selected = current_set[$index];
+            } else if(type == 'facebook') {
+                current_set = me.activePanel.fb.data;
+                selected = current_set[$index];
+            } else if(type == 'foursquare') {
+                current_set = me.activePanel.fsq; // foursquare one data only so no index
+                selected = current_set;
+            }
+
+            selected.justVoted = true;
+
+            if (vote_type == 1) { // UP VOTE
+
+                if(!selected.userUpVoted) {
+                    selected.upVotes++;
+                    selected.userUpVoted = true;
+                }
+
+                // since user can either upvote or downvote only(one)
+                // so if user upvote, and if user before had downvoted, remove their downvote
+                if(selected.userDownVoted) {
+                    selected.downVotes--;
+                    selected.userDownVoted = false;
+                }
+
+
+            } else if(vote_type == 0){ // DOWN VOTE
+
+                if(!selected.userDownVoted) {
+                    selected.downVotes++;
+                    selected.userDownVoted = true;
+                }
+
+                if (selected.userUpVoted) {
+                    selected.upVotes--;
+                    selected.userUpVoted = false;
+                }
+            } else {
+
+            }
+
+            window.setTimeout(function(){
+                $('.justVoted').animate({ backgroundColor: "rgba(245, 246, 206, 0)" }, 1000);
+                selected.justVoted = false;
+            }, 2000);
+
+        },
+
+        fadeJustVoted: function() {
         }
+
 
     }
 });

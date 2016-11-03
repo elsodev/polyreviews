@@ -277,6 +277,7 @@ class DataController extends Controller
                         'userDownVoted' =>  (!$user_id) ? false : (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
                         'upVotes' => $item->upVotesCount,
                         'downVotes' => $item->downVotesCount,
+                        'justVoted' => false,
                     ]
                 );
 
@@ -313,6 +314,7 @@ class DataController extends Controller
                         'userDownVoted' =>  (!$user_id) ? false : (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
                         'upVotes' => $item->upVotesCount,
                         'downVotes' => $item->downVotesCount,
+                        'justVoted' => false,
                     ]
                 );
 
