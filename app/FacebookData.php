@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FacebookData extends Model
 {
+    use Votable;
+    
     protected $table = 'facebook_datas';
     protected $fillable = [
         'place_id', 'ratings', 'obj_id', 'data' 
@@ -24,15 +26,4 @@ class FacebookData extends Model
     {
         return $this->belongsTo(\App\Place::class);
     }
-
-    /**
-     * A FacebookData has many Votes(polymorphic)
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function votes()
-    {
-        return $this->morphMany(\App\Vote::class, 'obj');
-    }
-
 }

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
 {
+    use Votable;
+
     protected $table = 'places';
     protected $fillable = [
         'lng', 'lat', 'name', 'address', 'description', 'contact', 'avg_rating', 'last_fetch'
@@ -20,15 +22,5 @@ class Place extends Model
     public function categories()
     {
         return $this->belongsToMany(\App\Category::class, 'places_categories', 'place_id');
-    }
-
-    /**
-     * A Place has Many Votes (polymorphic)
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function votes()
-    {
-        return $this->morphMany(\App\Vote::class, 'obj');
     }
 }

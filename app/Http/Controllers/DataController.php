@@ -73,8 +73,13 @@ class DataController extends Controller
             ]);
 
             // check whether google data exists
-            $dbGoogleData = GoogleData::where('place_id', $place->id)->with('votes')->orderBy('relevantOrder', 'asc')->get();
-            $dbFacebookData = FacebookData::where('place_id', $place->id)->with('votes')->orderBy('ratings', 'desc')->get();
+            $dbGoogleData = GoogleData::where('place_id', $place->id)
+                ->with('votes', 'upVotesCount', 'downVotesCount')->orderBy('relevantOrder', 'asc')
+                ->get();
+
+            $dbFacebookData = FacebookData::where('place_id', $place->id)
+                ->with('votes', 'upVotesCount', 'downVotesCount')->orderBy('ratings', 'desc')
+                ->get();
 
             // only format data if true(exists)
             if(count($dbGoogleData) > 0) $googleData = $this->formatGoogleData($dbGoogleData);
@@ -88,8 +93,8 @@ class DataController extends Controller
         return response()->json([
             'success' => true,
             'place_id' => $returnPlace->id,
-            'upVotes' => $returnPlace->votes->where('vote_type', 1)->count(),
-            'downVotes' => $returnPlace->votes->where('vote_type', 0)->count(),
+            'upVotes' => $returnPlace->upVotesCount,
+            'downVotes' => $returnPlace->downVotesCount,
             'userUpVoted' => (!$user_id) ?: (($returnPlace->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
             'userDownVoted' =>  (!$user_id) ?: (($returnPlace->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
             'google' => $googleData,
@@ -268,8 +273,8 @@ class DataController extends Controller
                         'price_range' => (isset($decoded->price_range)) ? $decoded->price_range: 'No price range available',
                         'userUpVoted' => (!$user_id) ?: (($item->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
                         'userDownVoted' =>  (!$user_id) ?: (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
-                        'upVotes' => $item->votes->where('vote_type', 1)->count(),
-                        'downVotes' => $item->votes->where('vote_type', 0)->count(),
+                        'upVotes' => $item->upVotesCount,
+                        'downVotes' => $item->downVotesCount,
                     ]
                 );
 
@@ -304,8 +309,8 @@ class DataController extends Controller
                         'relevantOrder' => $item->relevantOrder,
                         'userUpVoted' => (!$user_id) ?: (($item->votes->where('vote_type', 1)->where('user_id', $user_id)->count() > 0) ? true:false) ,
                         'userDownVoted' =>  (!$user_id) ?: (($item->votes->where('vote_type', 0)->where('user_id', $user_id)->count() > 0) ? true:false),
-                        'upVotes' => $item->votes->where('vote_type', 1)->count(),
-                        'downVotes' => $item->votes->where('vote_type', 0)->count(),
+                        'upVotes' => $item->upVotesCount,
+                        'downVotes' => $item->downVotesCount,
                     ]
                 );
 
