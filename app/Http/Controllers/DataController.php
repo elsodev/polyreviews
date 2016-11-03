@@ -201,10 +201,22 @@ class DataController extends Controller
         $vote = Vote::where('user_id', Auth::id())
             ->where('obj_type', $obj_type)
             ->where('obj_id', $request->input('id'))
-            ->where('vote_type', $request->input('vote_type'))
-            ->get();
+            ->first();
 
-        if(count($vote) <= 0) {
+        if(count($vote) > 0 && !is_null($vote)) {
+            if($vote->vote_type != $request->input('vote_type')) {
+                // vote same post, different vote type
+                // delete old vote
+                $vote->delete();
+
+                $vote = Vote::create([
+                    'user_id' => Auth::id(),
+                    'obj_type' => $obj_type,
+                    'obj_id' => $request->input('id'),
+                    'vote_type' => $request->input('vote_type')
+                ]);
+            } 
+        } else {
             $vote = Vote::create([
                 'user_id' => Auth::id(),
                 'obj_type' => $obj_type,
@@ -212,7 +224,7 @@ class DataController extends Controller
                 'vote_type' => $request->input('vote_type')
             ]);
         }
-
+        
         return response()->json([
             'success' => true,
             'data' => $vote

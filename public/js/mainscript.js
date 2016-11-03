@@ -137,7 +137,11 @@ var main = new Vue({
                 ratings: fsq_rating,
                 no_of_ratings: data.venue.ratingSignals,
                 price: price,
-                tips: data.tips
+                tips: data.tips,
+                upVotes: 0,
+                downVotes: 0,
+                userUpVoted: false,
+                userDownVoted: false
             };
             
             $('#foursquare_col .data_ratings .rating').rating('set rating', fsq_rating);
@@ -145,6 +149,10 @@ var main = new Vue({
             // sync with server, cache the data
             ajaxPostJson('/sync', {fsq: data})
                 .success(function(syncData) {
+
+                    // place id for foursquare data
+                    me.activePanel.fsq.id = syncData.place_id;
+
                     var query;
 
                     //----------------------- GOOGLE -----------------------------
@@ -255,24 +263,56 @@ var main = new Vue({
          */
         vote: function(type, id, vote_type, $index)
         {
-            console.log(type, id, vote_type);
-
             var me = this;
 
             ajaxPostJson('/vote', {type: type, id: id, vote_type: vote_type})
                 .success(function(data) {
 
-                    //TODO user up vote state and down vote state
-                    
                     if(data.success) {
+                        
+                        var current_set;
+                        var selected;
 
-                        if (vote_type = 1) { // upvote
-                            me.activePanel.g.results.$set($index, {upVotes : me.activePanel.g.results[$index].upVotes++});
-                        } else if(vote_type == 0){ // downvote
-                            me.activePanel.g.results.$set($index, {upVotes : me.activePanel.g.results[$index].downVotes++});
-                        } else {
-                            // error
+                        if(type == 'google') {
+                            current_set = me.activePanel.g.results;
+                            selected = current_set[$index];
+                        } else if(type == 'facebook') {
+                            current_set = me.activePanel.fb.data;
+                            selected = current_set[$index];
+                        } else if(type == 'foursquare') {
+                            current_set = me.activePanel.fsq; // foursquare one data only so no index
+                            selected = current_set;
                         }
+
+
+                        if (vote_type == 1) { // UP VOTE
+
+                                selected.upVotes++;
+                                selected.userUpVoted = true;
+
+                                console.log(selected.userUpVoted);
+
+                                // since user can either upvote or downvote only(one)
+                                // so if user upvote, and if user before had downvoted, remove their downvote
+                                if(selected.userDownVoted) {
+                                    selected.downVotes--;
+                                    selected.userDownVoted = false;
+                                }
+                            
+
+                        } else if(vote_type == 0){ // DOWN VOTE
+
+                                selected.downVotes++;
+                                selected.userDownVoted = true;
+
+                                if (selected.userUpVoted) {
+                                    selected.upVotes--;
+                                    selected.userUpVoted = false;
+                                }
+                        } else {
+
+                        }
+
                     }
 
                 })

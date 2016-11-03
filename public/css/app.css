@@ -310,6 +310,9 @@ Right Panel
     margin:0;
 }
 
+#main #rightPane .voting .voted{
+    color:#ff0000;
+}
 
 
 

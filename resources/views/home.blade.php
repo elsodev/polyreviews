@@ -88,6 +88,22 @@
                                     @{{ activePanel.fsq.tips[0].user.firstName }} says "@{{ activePanel.fsq.tips[0].text }}"
                                 </a></p>
                             </div>
+
+
+                            <div class="voting hideThis" :class="{hideThis: !activePanel.fsq.syncComplete}">
+                                <!--only show when sync complete-->
+                                <a href="#" class="voteUp"
+                                   v-on:click.prevent="vote('foursquare', activePanel.fsq.id, 1, false)"
+                                   :class="{voted: activePanel.fsq.userUpVoted}">
+                                    <i class="ui arrow up icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ activePanel.fsq.upVotes }}</span>
+                                </a>
+
+                                <a href="#" class="voteDown"
+                                   v-on:click.prevent="vote('foursquare', activePanel.fsq.id, 0, false)"
+                                   :class="{voted: activePanel.fsq.userDownVoted}">
+                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.downVotes > 0">@{{ activePanel.fsq.downVotes }}</span>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="item">
@@ -97,6 +113,7 @@
                                 </a>
                             </div>
                         </div><!-- /View button-->
+
 
                     </div>
 
@@ -123,6 +140,20 @@
                                     <small><i class="ui dollar icon"></i> @{{ item.price_range }}</small><br>
                                     <small><i class="ui user icon"></i> @{{ item.were_here_count }} people were here</small><br>
                                     <br><p><i class="ui info circle icon"></i> @{{ item.description }}</p>
+
+                                <div class="voting">
+                                    <a href="#" class="voteUp"
+                                       v-on:click.prevent="vote('facebook', item.id, 1, $index)"
+                                       :class="{voted: item.userUpVoted}">
+                                        <i class="ui arrow up icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ item.upVotes }}</span>
+                                    </a>
+
+                                    <a href="#" class="voteDown"
+                                       v-on:click.prevent="vote('facebook', item.id, 0, $index)"
+                                       :class="{voted: item.userDownVoted}">
+                                        <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.downVotes > 0">@{{ item.downVotes }}</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -148,11 +179,15 @@
                             </div>
 
                             <div class="voting">
-                                <a href="#" class="voteUp" v-on:click="vote('google', item.id, 1, $index)">
+                                <a href="#" class="voteUp"
+                                   v-on:click.prevent="vote('google', item.id, 1, $index)"
+                                   :class="{voted: item.userUpVoted}">
                                     <i class="ui arrow up icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ item.upVotes }}</span>
                                 </a>
 
-                                <a href="#" class="voteDown" v-on:click="vote('google', item.id, 0, $index)">
+                                <a href="#" class="voteDown"
+                                   v-on:click.prevent="vote('google', item.id, 0, $index)"
+                                   :class="{voted: item.userDownVoted}">
                                     <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.downVotes > 0">@{{ item.downVotes }}</span>
                                 </a>
                             </div>
