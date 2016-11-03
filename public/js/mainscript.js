@@ -181,7 +181,17 @@ var main = new Vue({
                     }
 
                     // ----------------------- FACEBOOK -------------------------------
-                    query = data.venue.name + ' ' + data.venue.location.formattedAddress[1].replace(/[0-9]/g, '');
+
+                    // sometimes foursquare formatted address only supply one address
+                    var getAddress;
+                    if(typeof data.venue.location.formattedAddress[1] == 'undefined') {
+                        getAddress = data.venue.location.formattedAddress[0];
+                    } else {
+                        getAddress =  data.venue.location.formattedAddress[1];
+                    }
+
+                    // generate query
+                    query = data.venue.name + ' ' + getAddress.replace(/[0-9]/g, '');
 
                     if(syncData.facebook != null) {
 
