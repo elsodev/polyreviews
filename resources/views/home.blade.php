@@ -153,7 +153,7 @@
                                 </a>
 
                                 <a href="#" class="voteDown" v-on:click="vote('google', item.id, 0, $index)">
-                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.upVotes > 0">@{{ item.downVotes }}</span>
+                                    <i class="ui arrow down icon"></i> <span class="voteNum" v-if="item.downVotes > 0">@{{ item.downVotes }}</span>
                                 </a>
                             </div>
                         </div>

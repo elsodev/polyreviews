@@ -262,6 +262,8 @@ var main = new Vue({
             ajaxPostJson('/vote', {type: type, id: id, vote_type: vote_type})
                 .success(function(data) {
 
+                    //TODO user up vote state and down vote state
+                    
                     if(data.success) {
 
                         if (vote_type = 1) { // upvote
