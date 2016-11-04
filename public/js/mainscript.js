@@ -384,6 +384,32 @@ var main = new Vue({
 
         },
 
+        filterByCategory: function(category) {
+            var me = this;
+            if(category == 'all') {
+                // show all markers
+               $.each(this.markersArray, function(i, m) {
+                   m.setVisible(true);
+               });
+            } else {
+                var found = false;
+                $.each(this.markersArray, function(i, m) {
+                    found = false;
+
+                    $.each(m.data.venue.categories, function(i, cat) {
+                        if(cat.name == category) {
+                            m.setVisible(true);
+                            found = true;
+                        }
+                    });
+
+                    if(!found) m.setVisible(false);
+
+                });
+            }
+
+        },
+
         _clearMap: function()
         {
             if (this.markersArray) {
@@ -438,5 +464,9 @@ $(document).ready(function() {
                 console.log('Failed to Geo code:' + $(this).val());
             }
         });
+    });
+
+    $('#category_dropdown').on('change', function() {
+        main.filterByCategory($(this).val());
     });
 });
