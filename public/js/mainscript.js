@@ -6,6 +6,8 @@ var main = new Vue({
         isMapLoading: true,
         searchInput : '',
         map : null,
+        markersArray: [],
+        circlesArray: [],
 
         activePanel: {
             primary: {
@@ -34,37 +36,96 @@ var main = new Vue({
     
     methods: {
 
+
+        initMap : function() {
+
+            // removes all point of interest, eg. shops, restaurants icons
+            var noPoi = [{
+                featureType: "poi",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+            ];
+
+            var maps_center = {lat: locations.default_center.lat, lng: locations.default_center.lng};
+            return new google.maps.Map(document.getElementById('map'), {
+                zoom: 16,
+                center: maps_center,
+                streetViewControl: false, // disables street view
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.BOTTOM_LEFT
+                },
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER
+                },
+                styles: noPoi
+            });
+        },
+
+
+
         getNearby: function()
         {
             var me = this;
 
-            ajaxGetJson('/getStartingPins').success(function(data) {
-
-                // get places
-                $.each(data.response.groups[0].items, function(index, item) {
-
-                    // get categories
-                    var categories = '';
-                    $.each(item.venue.categories, function(index, cat) {
-                         categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
-                    });
-                    
-                    // create a marker on map
-                    me.createMarker(
-                        me.map,
-                        {lat: item.venue.location.lat, lng: item.venue.location.lng},
-                        item.venue.name,
-                        new google.maps.InfoWindow({
-                            content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
-                        }),
-                        item
-                    );
-                });
-
-                me.isMapLoading = false;
+            ajaxGetJson('/get/start').success(function(data) {
+                me._drawRadiusCircle({lat: parseFloat(locations.default_center.lat), lng: parseFloat(locations.default_center.lng)});
+                me.loadLocations(data);
             }).error(function() {
                 me.isMapLoading = false;
             });
+        },
+
+
+        loadLocations: function(data){
+            // get places
+            var me = this;
+
+            $.each(data.response.groups[0].items, function(index, item) {
+
+                // get categories
+                var categories = '';
+                $.each(item.venue.categories, function(index, cat) {
+                    categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
+                });
+
+                // create a marker on map
+                me.createMarker(
+                    me.map,
+                    {lat: item.venue.location.lat, lng: item.venue.location.lng},
+                    item.venue.name,
+                    new google.maps.InfoWindow({
+                        content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
+                    }),
+                    item
+                );
+            });
+
+            me.isMapLoading = false;
+        },
+
+        changeMapCenter: function(geometryLoc)
+        {
+            var me =  this;
+
+            this.map.setCenter(geometryLoc);
+            this.isMapLoading = true;
+            me._clearMap();
+
+            ajaxGetJson('/get/loc', {lat: geometryLoc.lat, lng:geometryLoc.lng})
+                .success(function(data) {
+                    me.loadLocations(data);
+                    me._drawRadiusCircle({lat: parseFloat(geometryLoc.lat()), lng: parseFloat(geometryLoc.lng())});
+                    me.isMapLoading = false;
+                })
+                .error(function() {
+                    infoPopUp.show('error', 'Unable to load places for this area');
+                    me.getNearby(); // switch back to default nearby
+                    me.isMapLoading = false;
+                });
+
         },
 
         createMarker: function(map, place, title, infowindow, data) {
@@ -90,6 +151,8 @@ var main = new Vue({
                 infowindow.close();
             });
 
+            // so we cna keep track of on map markers
+            this.markersArray.push(marker);
         },
 
         /**
@@ -162,7 +225,7 @@ var main = new Vue({
 
                     //----------------------- GOOGLE -----------------------------
 
-                    // LFC ss15/4c review
+                    // Example: LFC ss15/4c review
                     query = data.venue.name + ' ' + data.venue.location.formattedAddress[0] + ' review';
 
                     if(syncData.google != null) {
@@ -231,34 +294,6 @@ var main = new Vue({
             this.isRightPaneOpen = false;
         },
 
-        initMap : function() {
-
-            // removes all point of interest, eg. shops, restaurants icons
-            var noPoi = [{
-                    featureType: "poi",
-                    stylers: [
-                        { visibility: "off" }
-                    ]
-                }
-            ];
-
-            var maps_center = {lat: locations.default_center.lat, lng: locations.default_center.lng};
-            return new google.maps.Map(document.getElementById('map'), {
-                zoom: 17,
-                center: maps_center,
-                streetViewControl: false, // disables street view
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                    position: google.maps.ControlPosition.BOTTOM_LEFT
-                },
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_CENTER
-                },
-                styles: noPoi
-            });
-        },
-
-
         _loadGoogleData: function(data, query)
         {
             this.activePanel.g = {
@@ -280,13 +315,15 @@ var main = new Vue({
         {
             var me = this;
 
+            if(is_user_guest) {
+                infoPopUp.show('error', 'Please <a href="'+ site.url +'/login" style="color:#fff;text-decoration: underline">log in</a> to vote')
+                return;
+            }
 
             ajaxPostJson('/vote', {type: type, id: id, vote_type: vote_type})
                 .success(function(data) {
-
                     if(data.success) {
                     }
-
                 })
                 .error(function() {
                     infoPopUp.show('error', 'Please <a href="'+ site.url +'/login" style="color:#fff;text-decoration: underline">log in</a> to vote')
@@ -346,9 +383,59 @@ var main = new Vue({
 
         },
 
-        fadeJustVoted: function() {
+        _clearMap: function()
+        {
+            if (this.markersArray) {
+                for (i in this.markersArray) {
+                    this.markersArray[i].setMap(null);
+                }
+                this.markersArray.length = 0;
+            }
+
+            if (this.circlesArray) {
+                for (i in this.circlesArray) {
+                    this.circlesArray[i].setMap(null);
+                }
+                this.circlesArray.length = 0;
+            }
+        },
+
+        _drawRadiusCircle: function(center)
+        {
+            var circle = new google.maps.Circle({
+                strokeColor: '#CDD15B',
+                strokeOpacity: 0.5,
+                strokeWeight: 2,
+                fillColor: '#F9FACF',
+                fillOpacity: 0.45,
+                map: this.map,
+                center: center,
+                radius: 1000
+            });
+
+            this.circlesArray.push(circle);
         }
 
 
     }
+});
+
+$(document).ready(function() {
+
+    var geocoder = new google.maps.Geocoder();
+
+    $('#hood_dropdown').on('change', function() {
+
+        // Define address to ce
+        geocoder.geocode({
+            'address':  $(this).val()
+        }, function (results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+                main.changeMapCenter(results[0].geometry.location);
+            } else {
+                console.log('Failed to Geo code:' + $(this).val());
+            }
+        });
+    });
 });

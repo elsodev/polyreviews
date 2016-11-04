@@ -42,17 +42,33 @@ class HomeController extends Controller
      */
     public function getStartingPins()
     {
-        $longitude = config('app.locations.default_center.lng');
-        $latitude = config('app.locations.default_center.lat');
+        $lng = config('app.locations.default_center.lng');
+        $lat = config('app.locations.default_center.lat');
+        return $this->getFoursquareLocations($lat, $lng);
+    }
+    
+    /**
+     * Change Location(on select neighbourhood dropdown)
+     * 
+     * @param Requests\ChangeLocationRequest $request
+     * @return string
+     */
+    public function changeLocation(Requests\ChangeLocationRequest $request)
+    {
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+        return $this->getFoursquareLocations($lat, $lng);
+    }
+    
+    private function getFoursquareLocations($lat, $lng, $radius = 1000)
+    {
         $response = $this->client->request('GET',
-            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food'.$this->oauthQuery,
+            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&section=food'.$this->oauthQuery,
             [
                 'decode_content' => false
             ]);
 
-        $content = $response->getBody()->getContents();
-        
-        return $content;
+        return $response->getBody()->getContents();
     }
 
 

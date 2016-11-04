@@ -10,7 +10,7 @@
     <div class="ui sixteen wide mobile four wide computer column">
         <div class="ui row mt20 mb15">
             <h2 class="ui header centered">
-                Polyreview Register
+                {{ config('app.name') }} Register
             </h2>
         </div>
 

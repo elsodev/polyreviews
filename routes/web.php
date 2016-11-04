@@ -17,8 +17,11 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
-Route::get('/getStartingPins', 'HomeController@getStartingPins');
 Route::post('/sync', 'DataController@sync');
+
+Route::get('/get/start', 'HomeController@getStartingPins');
+Route::get('/get/loc', 'HomeController@changeLocation');
+
 Route::get('/get/google', 'DataController@getGoogleData');
 Route::get('/get/facebook', 'DataController@getFacebookData');
 

@@ -43,7 +43,7 @@ return [
    */
     'locations' => [
         'default_center' => [
-            'name' => 'SS15',
+            'name' => 'SS 15',
             'lat' => 3.076393,
             'lng' => 101.589499
         ],

@@ -21,7 +21,9 @@
                         @foreach($areas as $area)
                             <optgroup label="{{ $area->name }}">
                                 @foreach($area->neighbourhoods as $hood)
-                                    <option value="{{ $hood->name }}">{{ $hood->name }} {{ ($hood->other_name) ? '- '.$hood->other_name : '' }}</option>
+                                    <option value="{{ ($hood->other_name) ?: $hood->name }}, {{ $hood->area->name }}, Malaysia"
+                                    @if($hood->name == config('app.locations.default_center.name')) selected="selected" @endif
+                                    >{{ $hood->name }} {{ ($hood->other_name) ? '- '.$hood->other_name : '' }}</option>
                                 @endforeach
                             </optgroup>
                         @endforeach
@@ -32,7 +34,7 @@
                     <select class="ui search dropdown" id="category_dropdown" style="max-width: 200px;">
                         <option value="all">All</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->name }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </li>

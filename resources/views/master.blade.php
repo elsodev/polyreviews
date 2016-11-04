@@ -20,7 +20,8 @@
         var site = {
             'url' : '{{ url('/') }}'
         };
-        var locations = {!! json_encode(config('app.locations')) !!}
+        var locations = {!! json_encode(config('app.locations')) !!};
+        var is_user_guest = {{ Auth::guest() }};
     </script>
 
 </head>

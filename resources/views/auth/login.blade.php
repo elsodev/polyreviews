@@ -9,7 +9,7 @@
         <div class="ui computer only six wide column"></div>
         <div class="ui sixteen wide mobile four wide computer column">
             <div class="ui row mt20 mb15">
-                <h2 class="ui header centered">Polyreview Login</h2>
+                <h2 class="ui header centered">{{ config('app.name') }} Login</h2>
             </div>
             <div class="ui row">
                 <div class="ui segments">

@@ -54,6 +54,7 @@ var infoPopUp = {
     }
 };
 
+
 /**
  * JS to decode uft8 characters
  * Source: https://gist.github.com/chrisveness/bcb00eb717e6382c5608
