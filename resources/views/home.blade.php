@@ -13,7 +13,9 @@
                     <a href="#" class="siteLogo">{{ config('app.name') }}</a>
                 </li>
                 <li>
-                    <input type="text" class="searchBox" placeholder="Find a Restaurant" v-model="searchInput"/>
+                    <input type="text" class="searchBox" placeholder="Find a Restaurant"
+                           v-on:change="search"
+                           v-model="searchInput"/>
                 </li>
 
                 <li style="max-width: 200px">

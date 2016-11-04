@@ -21,7 +21,7 @@
             'url' : '{{ url('/') }}'
         };
         var locations = {!! json_encode(config('app.locations')) !!};
-        var is_user_guest = {{ Auth::guest() }};
+        var is_user_guest = {{ (Auth::guest()) ? 'true' : 'false' }};
     </script>
 
 </head>

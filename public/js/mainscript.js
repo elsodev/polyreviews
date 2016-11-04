@@ -410,6 +410,13 @@ var main = new Vue({
 
         },
 
+        search: function()
+        {
+            if($.trim(this.searchInput.length) > 3) {
+                console.log('do search');
+            }
+        },
+
         _clearMap: function()
         {
             if (this.markersArray) {
