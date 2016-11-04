@@ -82,6 +82,7 @@ var main = new Vue({
         loadLocations: function(data){
             // get places
             var me = this;
+            this.closeRightPane();
 
             $.each(data.response.groups[0].items, function(index, item) {
 
