@@ -155,11 +155,12 @@ var main = new Vue({
                 }
             }
 
-            if(found != '') {
-                this.isSearching = false; // hides search results
-                this.isLoadingSearchResults = true;
-                this.closeRightPane();
-            } else {
+            this.isSearching = false; // hides search results
+            this.isLoadingSearchResults = true;
+            this.closeRightPane();
+
+            // not found
+            if(found == '') {
                 // find using server
                 this.isMapLoading = true;
 

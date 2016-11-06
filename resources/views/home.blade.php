@@ -23,7 +23,6 @@
                                 <i class="ui circle notched loading icon"></i> Searching ...
                             </li>
                             <li v-for="item in searchResults"
-                                v-class="{active : isSearchItemSelected($index)}"
                                 v-if="!isLoadingSearchResults"
                                 v-on:click="clickSearchResult(item)">
                                 <span class="title">
@@ -63,7 +62,7 @@
                 @endif
             </ul>
         </div>
-        <div id="search_helper" class="hideThis" :class="{hideThis : !isSearching}"><p>Press 'esc' to cancel search</p></div>
+        <div id="search_helper" class="hideThis" :class="{hideThis : !isSearching || (searchResults.length <= 0)}}"><p>Press 'esc' to cancel search</p></div>
         <div id="map"></div>
         <div id="rightPane">
 
@@ -80,7 +79,7 @@
                         <div class="ui star rating" data-rating="0"></div>
                     </div>
 
-                    <div class="x hideThis" :class="{hideThis: !isRightPaneOpen || (searchResults.length > 0)}" v-on:click="closeRightPane"></div>
+                    <div class="x hideThis" :class="{hideThis: !isRightPaneOpen}" v-on:click="closeRightPane"></div>
                 </div>
                 <!--/Primary Column-->
 
