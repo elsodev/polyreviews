@@ -62,7 +62,7 @@
                 @endif
             </ul>
         </div>
-        <div id="search_helper" class="hideThis" :class="{hideThis : !isSearching || (searchResults.length <= 0)}}"><p>Press 'esc' to cancel search</p></div>
+        <div id="search_helper" class="hideThis" :class="{hideThis : !isSearching}"><p>Press 'esc' to cancel search</p></div>
         <div id="map"></div>
         <div id="rightPane">
 
