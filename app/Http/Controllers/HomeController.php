@@ -15,6 +15,18 @@ class HomeController extends Controller
 {
     protected $client, $clientID, $clientSecret, $oauthQuery;
 
+    public function __construct()
+    {
+        $this->client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false)));
+        $this->clientID = config('app.foursquare_clientId');
+        $this->clientSecret = config('app.foursquare_clientSecret');
+        $this->oauthQuery =  '&client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
+
+    }
+
+    /**
+     * @return mixed
+     */
     public function index()
     {
         // get neighbourhood data
@@ -26,14 +38,6 @@ class HomeController extends Controller
             ->with('categories', $categories);
     }
 
-    public function __construct()
-    {
-        $this->client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false)));
-        $this->clientID = config('app.foursquare_clientId');
-        $this->clientSecret = config('app.foursquare_clientSecret');
-        $this->oauthQuery =  '&client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
-
-    }
 
     /**
      * Get Starting Pins based on default coordinates
@@ -59,9 +63,18 @@ class HomeController extends Controller
         $lng = $request->input('lng');
         return $this->getFoursquareLocations($lat, $lng);
     }
-    
+
+    /**
+     * Get Foursquare Locations
+     * 
+     * @param $lat
+     * @param $lng
+     * @param int $radius
+     * @return string
+     */
     private function getFoursquareLocations($lat, $lng, $radius = 1000)
     {
+        // using foursquare Explore API
         $response = $this->client->request('GET',
             'https://api.foursquare.com/v2/venues/explore?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&section=food'.$this->oauthQuery,
             [
@@ -71,25 +84,25 @@ class HomeController extends Controller
         return $response->getBody()->getContents();
     }
 
-
-    public function filter(Requests\FilterRequest $request)
+    /**
+     * Search Foursquare
+     * 
+     * @param Requests\FilterRequest $request
+     * @return string
+     */
+    public function search(Requests\FilterRequest $request)
     {
-        // center point of filter
-        $longitude = $request->input('centerLong');
-        $latitude = $request->input('centerLat');
+        $category = $request->input('category');
+        $query = trim($request->input('query'));
+        $area = $request->input('area');
 
-        // set forusquare api query parameter
-        $query = '&query=';
-        if($request->input('search')) {
-            $query .= $request->input('search');
-        } else if($request->input('category') && $request->input('category') != 'all') {
-            $query .= $request->input('category');
-        } else {
-            $query = '';
+        if($query == 'all') {
+            $category = '4d4b7105d754a06374d81259'; //foursquare food category id
         }
 
+        // using Foursquare venue search API
         $response = $this->client->request('GET',
-            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$latitude.','.$longitude.'&radius=1000&section=food'.$query.$this->oauthQuery,
+            'https://api.foursquare.com/v2/venues/search?near='.$area.'&query='.$query.'&limit=5&categoryId='.$category.$this->oauthQuery,
             [
                 'decode_content' => false
             ]);

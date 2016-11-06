@@ -34,7 +34,6 @@ class DataController extends Controller
         $googleData = null;
         $facebookData = null;
 
-
         $place = Place::where('lng', $data['venue']['location']['lng'])
             ->where('lat', $data['venue']['location']['lat'])
             ->first();
@@ -49,6 +48,7 @@ class DataController extends Controller
                 'name' => $data['venue']['name'],
                 'address' => json_encode($data['venue']['location']['formattedAddress']),
                 'contact' => '',
+                'data' => $data,
                 'last_fetch' => \Carbon\Carbon::now()->toDateTimeString()
             ]);
 
@@ -58,7 +58,8 @@ class DataController extends Controller
                 $dbCategory = Category::where('name', $category['name'])->exists();
                 if(!$dbCategory) {
                     $newCategory = Category::create([
-                        'name' => $category['name']
+                        'name' => $category['name'],
+                        'foursquare_id' => $category['id']
                     ]);
 
                     $newPlace->categories()->attach($newCategory->id);
@@ -125,13 +126,18 @@ class DataController extends Controller
 
             foreach ($results as $result) {
                 if($count >= 5) break;
-                $newGoogleData = GoogleData::create([
-                    'place_id' => $place_id,
-                    'title' => utf8_encode($result->getDataValue('title')),
-                    'link' => str_replace("/url?q=", "", $result->getDataValue('url')),
-                    'description' => utf8_encode($result->getDataValue('description')),
-                    'relevantOrder' => $result->getOnPagePosition(),
-                ]);
+                try{
+                    $newGoogleData = GoogleData::create([
+                        'place_id' => $place_id,
+                        'title' => utf8_encode($result->getDataValue('title')),
+                        'link' => str_replace("/url?q=", "", $result->getDataValue('url')),
+                        'description' => utf8_encode($result->getDataValue('description')),
+                        'relevantOrder' => $result->getOnPagePosition(),
+                    ]);
+
+                } catch (\Exception $e) {
+                    // error
+                }
 
                 array_push($data, $newGoogleData);
                 $count++;

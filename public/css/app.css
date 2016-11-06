@@ -160,6 +160,51 @@ Main menu
     z-index:99;
     color:#242424;
 }
+#main #search {
+    position:relative;
+}
+
+#main .searchResults {
+    width: 220px;
+    position: absolute;
+    top: 59px;
+    left:0;
+    border: 1px solid #ccc;
+    border-top:none;
+    background-color:rgba(255,255,255,0.8);
+}
+
+#main .searchResults li{
+    background-color:rgba(245, 246, 206, 0);
+    cursor:pointer;
+    width: 100%;
+    display: block;
+    padding: 7px;
+    border-bottom: 1px solid #ccc;
+    color:#242424;
+    transition: background-color 0.3s ease;
+}
+
+#main .searchResults li:hover {
+    background-color:rgba(245, 246, 206, 0.9);
+}
+
+#main .searchResults li:last-child{
+    border-bottom: none;
+}
+
+#main .searchResults .title {
+    display: block;
+    font-size: 1.1em;
+    font-weight: 200;
+}
+
+
+#main .searchResults .address {
+    display: block;
+    font-size: 0.9em;
+    color: #5d5d5d;
+}
 
 #main #mainMenu ul{
     list-style: none;

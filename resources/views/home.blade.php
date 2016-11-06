@@ -13,9 +13,25 @@
                     <a href="#" class="siteLogo">{{ config('app.name') }}</a>
                 </li>
                 <li>
-                    <input type="text" class="searchBox" placeholder="Find a Restaurant"
-                           v-on:change="search"
-                           v-model="searchInput"/>
+                    <div id="search">
+                        <input type="text" class="searchBox" placeholder="Find a Restaurant"
+                               v-on:change="search"
+                               v-model="searchInput"/>
+                        <ul class="searchResults hideThis" :class="{hideThis : !isSearching}">
+                            <li v-if="isLoadingSearchResults">
+                                <i class="ui circle notched loading icon"></i> Searching ...
+                            </li>
+                            <li v-for="item in searchResults" v-if="!isLoadingSearchResults" v-on:click="clickSearchResult(item)">
+                                <span class="title">
+                                    @{{ item.name }}
+                                </span>
+                                <span class="address">
+                                    @{{ item.address }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </li>
 
                 <li style="max-width: 200px">

@@ -18,6 +18,7 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 Route::post('/sync', 'DataController@sync');
+Route::get('/search', 'HomeController@search');
 
 Route::get('/get/start', 'HomeController@getStartingPins');
 Route::get('/get/loc', 'HomeController@changeLocation');

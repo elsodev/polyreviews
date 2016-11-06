@@ -5,9 +5,12 @@ var main = new Vue({
         isRightPaneOpen: false,
         isMapLoading: true,
         searchInput : '',
+        isSearching: false,
+        isLoadingSearchResults: true,
         map : null,
         markersArray: [],
         circlesArray: [],
+        searchResults: [],
 
         activePanel: {
             primary: {
@@ -78,6 +81,18 @@ var main = new Vue({
             });
         },
 
+
+        search: function()
+        {
+            if($.trim(this.searchInput.length) > 3) {
+                
+            }
+        },
+
+        clickSearchResult: function(item)
+        {
+            
+        },
 
         loadLocations: function(data){
             // get places
@@ -410,12 +425,6 @@ var main = new Vue({
 
         },
 
-        search: function()
-        {
-            if($.trim(this.searchInput.length) > 3) {
-                console.log('do search');
-            }
-        },
 
         _clearMap: function()
         {

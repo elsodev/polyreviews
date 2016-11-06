@@ -8,7 +8,7 @@ class Category extends Model
 {
     protected $table = 'categories';
     protected $fillable = [
-        'name'  
+        'name' , 'foursquare_id'
     ];
     
     public function places()
