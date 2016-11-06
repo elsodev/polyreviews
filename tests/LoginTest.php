@@ -12,7 +12,7 @@ class LoginTest extends TestCase
     public function testLoginPage()
     {
         $this->visit('/login')
-            ->see('Polyreview Login');
+            ->see('PolyReviews Login');
     }
 
     /**
