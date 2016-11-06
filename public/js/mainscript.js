@@ -512,10 +512,12 @@ var main = new Vue({
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function(e) {
 
     var geocoder = new google.maps.Geocoder();
 
+    // when neighbourhood dropdown change
+    // create geocode, tell main program to change the map center
     $('#hood_dropdown').on('change', function() {
 
         // Define address to ce
@@ -531,7 +533,20 @@ $(document).ready(function() {
         });
     });
 
+    // when category drodown change
+    // tell mainprogram to filter by category by category value
     $('#category_dropdown').on('change', function() {
         main.filterByCategory($(this).val());
     });
+
+});
+
+$(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+        if(main.isSearching) {
+            main.searchInput = ''; // empty search query
+        }
+        main.isSearching = false;
+        main.isLoadingSearchResults = true;
+    }
 });
