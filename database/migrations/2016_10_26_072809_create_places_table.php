@@ -22,10 +22,9 @@ class CreatePlacesTable extends Migration
             $table->text('address')->nullable();
             $table->text('description')->nullable();
             $table->text('contact')->nullable();
-            $table->float('avg_ratings')->default(0);
+            $table->json('data')->nullable(); // foursquare data store
             $table->timestamp('last_fetch');
             $table->timestamps();
-
 
             $table->foreign('neighbourhood_id')
                 ->references('id')->on('neighbourhoods')

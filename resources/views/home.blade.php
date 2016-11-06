@@ -13,9 +13,29 @@
                     <a href="#" class="siteLogo">{{ config('app.name') }}</a>
                 </li>
                 <li>
-                    <input type="text" class="searchBox" placeholder="Find a Restaurant"
-                           v-on:change="search"
-                           v-model="searchInput"/>
+                    <div id="search">
+                        <input type="text" class="searchBox" placeholder="Find a Restaurant"
+                               v-on:keyup.enter="search"
+                               v-on:keyup.esc="cancelSearch"
+                               v-model="searchInput"/>
+                        <ul class="searchResults hideThis" :class="{hideThis : !isSearching}">
+                            <li v-if="isLoadingSearchResults">
+                                <i class="ui circle notched loading icon"></i> Searching ...
+                            </li>
+                            <li v-for="item in searchResults"
+                                v-class="{active : isSearchItemSelected($index)}"
+                                v-if="!isLoadingSearchResults"
+                                v-on:click="clickSearchResult(item)">
+                                <span class="title">
+                                    @{{ item.name }}
+                                </span>
+                                <span class="address">
+                                    @{{ item.location.address }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </li>
 
                 <li style="max-width: 200px">
@@ -34,9 +54,9 @@
                 @if(count($categories) > 0)
                 <li  style="max-width: 200px">
                     <select class="ui search dropdown" id="category_dropdown" style="max-width: 200px;">
-                        <option value="all">All</option>
+                        <option value="all|all">All</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                            <option value="{{ $category->name }}|{{ $category->foursquare_id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </li>

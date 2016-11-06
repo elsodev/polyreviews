@@ -24,8 +24,10 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'centerLat' => 'required',
-            'centerLng' => 'required',
+            'query' => 'required',
+            'category' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
         ];
     }
 }

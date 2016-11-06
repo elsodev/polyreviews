@@ -5,9 +5,12 @@ var main = new Vue({
         isRightPaneOpen: false,
         isMapLoading: true,
         searchInput : '',
+        isSearching: false,
+        isLoadingSearchResults: true,
         map : null,
         markersArray: [],
         circlesArray: [],
+        searchResults: [],
 
         activePanel: {
             primary: {
@@ -79,13 +82,77 @@ var main = new Vue({
         },
 
 
+        search: function()
+        {
+            if($.trim(this.searchInput.length) > 2) {
+
+                var me = this;
+                var geocoder = new google.maps.Geocoder();
+                var area = $('#hood_dropdown').val();
+
+                me.isSearching = true;
+                me.isLoadingSearchResults = true;
+
+                // use google geocoder, much more accurate than foursquare's own geocoder
+                geocoder.geocode({
+                    'address': area
+                }, function (results, status) {
+
+                    if (status == google.maps.GeocoderStatus.OK) {
+
+                        // send to server to use foursquare venue search api
+                        ajaxGetJson('/search', {
+                            'category' : $('#category_dropdown').val().split('|')[1],
+                            'query' : me.searchInput,
+                            'lat' :  parseFloat(results[0].geometry.location.lat()),
+                            'lng' :  parseFloat(results[0].geometry.location.lng()),
+                        }).success(function(data) {
+                            if(data == 'null') {
+                                console.log('no results');
+                            } else {
+                                me.searchResults = data.response.venues;
+                                me.isLoadingSearchResults = false; //hides searching text
+                                if(me.searchResults.length <= 0) {
+                                    me.isSearching = false;
+                                    infoPopUp.show('error', 'Sorry, No results found <i class="ui frown icon"></i>');
+                                }
+                            }
+                        });
+
+                    } else {
+                        console.log('Failed to Geo code:' + $(this).val());
+                    }
+                });
+
+
+            } else {
+                infoPopUp.show('error', 'Please provide a longer search query');
+            }
+        },
+
+        cancelSearch: function() {
+            // reset
+            if(main.isSearching) {
+                main.searchInput = ''; // empty search query
+            }
+            main.isSearching = false;
+            main.isLoadingSearchResults = true;
+            main.activeSearchIndex = -1;
+
+        },
+
+        clickSearchResult: function(item)
+        {
+            
+        },
+
+
         loadLocations: function(data){
             // get places
             var me = this;
             this.closeRightPane();
 
             $.each(data.response.groups[0].items, function(index, item) {
-
                 // get categories
                 var categories = '';
                 $.each(item.venue.categories, function(index, cat) {
@@ -384,8 +451,10 @@ var main = new Vue({
 
         },
 
-        filterByCategory: function(category) {
+        filterByCategory: function(rawCategory) {
             var me = this;
+            var category = rawCategory.split("|")[0];
+
             if(category == 'all') {
                 // show all markers
                $.each(this.markersArray, function(i, m) {
@@ -410,12 +479,6 @@ var main = new Vue({
 
         },
 
-        search: function()
-        {
-            if($.trim(this.searchInput.length) > 3) {
-                console.log('do search');
-            }
-        },
 
         _clearMap: function()
         {
@@ -454,10 +517,12 @@ var main = new Vue({
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function(e) {
 
     var geocoder = new google.maps.Geocoder();
 
+    // when neighbourhood dropdown change
+    // create geocode, tell main program to change the map center
     $('#hood_dropdown').on('change', function() {
 
         // Define address to ce
@@ -473,7 +538,17 @@ $(document).ready(function() {
         });
     });
 
+    // when category drodown change
+    // tell mainprogram to filter by category by category value
     $('#category_dropdown').on('change', function() {
         main.filterByCategory($(this).val());
     });
+
+});
+
+// cancel search when click escape anywhere in document
+$(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+       main.cancelSearch();
+    }
 });

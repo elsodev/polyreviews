@@ -14,7 +14,7 @@ class FetchStatesAreasMY extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:states-areas-my';
+    protected $signature = 'fetch:loc';
 
     /**
      * The console command description.
