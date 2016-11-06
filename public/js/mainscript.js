@@ -132,15 +132,20 @@ var main = new Vue({
 
         cancelSearch: function() {
             // reset
-            this.searchInput = '';
-            this.isSearching = false;
-            this.isLoadingSearchResults = true;
+            if(main.isSearching) {
+                main.searchInput = ''; // empty search query
+            }
+            main.isSearching = false;
+            main.isLoadingSearchResults = true;
+            main.activeSearchIndex = -1;
+
         },
 
         clickSearchResult: function(item)
         {
             
         },
+
 
         loadLocations: function(data){
             // get places
@@ -541,12 +546,9 @@ $(document).ready(function(e) {
 
 });
 
+// cancel search when click escape anywhere in document
 $(document).keyup(function(e) {
     if (e.keyCode == 27) {
-        if(main.isSearching) {
-            main.searchInput = ''; // empty search query
-        }
-        main.isSearching = false;
-        main.isLoadingSearchResults = true;
+       main.cancelSearch();
     }
 });

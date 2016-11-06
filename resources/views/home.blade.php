@@ -22,7 +22,10 @@
                             <li v-if="isLoadingSearchResults">
                                 <i class="ui circle notched loading icon"></i> Searching ...
                             </li>
-                            <li v-for="item in searchResults" v-if="!isLoadingSearchResults" v-on:click="clickSearchResult(item)">
+                            <li v-for="item in searchResults"
+                                v-class="{active : isSearchItemSelected($index)}"
+                                v-if="!isLoadingSearchResults"
+                                v-on:click="clickSearchResult(item)">
                                 <span class="title">
                                     @{{ item.name }}
                                 </span>

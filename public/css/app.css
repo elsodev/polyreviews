@@ -189,6 +189,10 @@ Main menu
     background-color:rgba(245, 246, 206, 0.9);
 }
 
+#main .searchResults li.active {
+    background-color:rgba(245, 246, 206, 1);
+}
+
 #main .searchResults li:last-child{
     border-bottom: none;
 }
