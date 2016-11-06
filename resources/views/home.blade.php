@@ -15,7 +15,8 @@
                 <li>
                     <div id="search">
                         <input type="text" class="searchBox" placeholder="Find a Restaurant"
-                               v-on:change="search"
+                               v-on:keyup.enter="search"
+                               v-on:keyup.esc="cancelSearch"
                                v-model="searchInput"/>
                         <ul class="searchResults hideThis" :class="{hideThis : !isSearching}">
                             <li v-if="isLoadingSearchResults">
@@ -26,7 +27,7 @@
                                     @{{ item.name }}
                                 </span>
                                 <span class="address">
-                                    @{{ item.address }}
+                                    @{{ item.location.address }}
                                 </span>
                             </li>
                         </ul>
@@ -50,9 +51,9 @@
                 @if(count($categories) > 0)
                 <li  style="max-width: 200px">
                     <select class="ui search dropdown" id="category_dropdown" style="max-width: 200px;">
-                        <option value="all">All</option>
+                        <option value="all|all">All</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                            <option value="{{ $category->name }}|{{ $category->foursquare_id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </li>

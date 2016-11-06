@@ -114,8 +114,6 @@ class DataController extends Controller
     {
         $query = $request->input('query');
         $place_id = $request->input('place_id');
-        
-
         $results = $this->scrapper->scrapGoogle($query)->getItems();
 
         $data = [];

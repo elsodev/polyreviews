@@ -6,10 +6,12 @@ use App\Area;
 use App\Category;
 use App\Neighbourhood;
 use App\Place;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use GuzzleHttp\Client;
+use League\Flysystem\Exception;
 
 class HomeController extends Controller
 {
@@ -94,22 +96,31 @@ class HomeController extends Controller
     {
         $category = $request->input('category');
         $query = trim($request->input('query'));
-        $area = $request->input('area');
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+        $radius = 1000;
 
-        if($query == 'all') {
+        if($category == 'all') {
             $category = '4d4b7105d754a06374d81259'; //foursquare food category id
         }
 
         // using Foursquare venue search API
-        $response = $this->client->request('GET',
-            'https://api.foursquare.com/v2/venues/search?near='.$area.'&query='.$query.'&limit=5&categoryId='.$category.$this->oauthQuery,
-            [
-                'decode_content' => false
-            ]);
+        try{
+            $response = $this->client->request('GET',
+                'https://api.foursquare.com/v2/venues/search?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&query='.$query.'&limit=5&categoryId='.$category.$this->oauthQuery,
+                [
+                    'decode_content' => false
+                ]);
 
-        $content = $response->getBody()->getContents();
+            $content = $response->getBody()->getContents();
 
-        return $content;
+            return $content;
+        } catch(ClientException $ex) {
+            dd($ex->getMessage());
+
+            return null;
+        }
+      
     }
     
     

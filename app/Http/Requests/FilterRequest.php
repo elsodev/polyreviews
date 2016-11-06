@@ -26,7 +26,8 @@ class FilterRequest extends FormRequest
         return [
             'query' => 'required',
             'category' => 'required',
-            'area' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
         ];
     }
 }
