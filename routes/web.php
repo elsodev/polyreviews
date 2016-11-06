@@ -20,6 +20,7 @@ Route::get('/home', 'HomeController@index');
 Route::post('/sync', 'DataController@sync');
 Route::get('/search', 'HomeController@search');
 
+Route::get('/get/location', 'HomeController@getSingleLocation');
 Route::get('/get/start', 'HomeController@getStartingPins');
 Route::get('/get/loc', 'HomeController@changeLocation');
 

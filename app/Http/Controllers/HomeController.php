@@ -22,7 +22,7 @@ class HomeController extends Controller
         $this->client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false)));
         $this->clientID = config('app.foursquare_clientId');
         $this->clientSecret = config('app.foursquare_clientSecret');
-        $this->oauthQuery =  '&client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
+        $this->oauthQuery =  'client_id='. $this->clientID. '&client_secret='. $this->clientSecret.'&v=20161015&m=foursquare';
 
     }
 
@@ -78,7 +78,7 @@ class HomeController extends Controller
     {
         // using foursquare Explore API
         $response = $this->client->request('GET',
-            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&section=food'.$this->oauthQuery,
+            'https://api.foursquare.com/v2/venues/explore?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&section=food&'.$this->oauthQuery,
             [
                 'decode_content' => false
             ]);
@@ -103,11 +103,11 @@ class HomeController extends Controller
         if($category == 'all') {
             $category = '4d4b7105d754a06374d81259'; //foursquare food category id
         }
-
+        
         // using Foursquare venue search API
         try{
             $response = $this->client->request('GET',
-                'https://api.foursquare.com/v2/venues/search?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&query='.$query.'&limit=5&categoryId='.$category.$this->oauthQuery,
+                'https://api.foursquare.com/v2/venues/search?'.'ll='.$lat.','.$lng.'&radius='.$radius.'&query='.$query.'&limit=5&categoryId='.$category.'&'.$this->oauthQuery,
                 [
                     'decode_content' => false
                 ]);
@@ -116,11 +116,33 @@ class HomeController extends Controller
 
             return $content;
         } catch(ClientException $ex) {
-            dd($ex->getMessage());
-
             return null;
         }
       
+    }
+    
+    public function getSingleLocation(Request $request)
+    {
+        $this->validate($request, [
+           'venue_id' => 'required' 
+        ]);
+
+        // using Foursquare venue search API
+        try{
+            $response = $this->client->request('GET',
+                'https://api.foursquare.com/v2/venues/venue/'.$request->venue_id.'?'.$this->oauthQuery,
+                [
+                    'decode_content' => false
+                ]);
+
+            $content = $response->getBody()->getContents();
+
+            return $content;
+            
+        } catch(ClientException $ex) {
+            return null;
+        }
+
     }
     
     

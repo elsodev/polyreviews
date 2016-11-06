@@ -130,22 +130,40 @@ var main = new Vue({
             }
         },
 
+
+
+        clickSearchResult: function(searchItem)
+        {
+            // check if current pins have this data
+            var found = '';
+            for(var i in this.markersArray) {
+                if(this.markersArray[i].data.venue.id == searchItem.id) {
+                    found = this.markersArray[i].data;
+                } else {
+                    this.markersArray[i].setVisible(false); // hide all unrelated
+                }
+            }
+
+            if(found != '') {
+                this.isSearching = false; // hides search results
+                this.isLoadingSearchResults = true;
+                this.closeRightPane();
+            } else {
+                // find using server
+                this.isMapLoading = true;
+
+            }
+        },
+
         cancelSearch: function() {
             // reset
-            if(main.isSearching) {
-                main.searchInput = ''; // empty search query
-            }
-            main.isSearching = false;
-            main.isLoadingSearchResults = true;
-            main.activeSearchIndex = -1;
+            this.searchInput = ''; // empty search query
+            this.isSearching = false;
+            this.isLoadingSearchResults = true;
+            this.activeSearchIndex = -1;
+            this._showAllMarkers(); // show all hidden markers from search
 
         },
-
-        clickSearchResult: function(item)
-        {
-            
-        },
-
 
         loadLocations: function(data){
             // get places
@@ -154,24 +172,31 @@ var main = new Vue({
 
             $.each(data.response.groups[0].items, function(index, item) {
                 // get categories
-                var categories = '';
-                $.each(item.venue.categories, function(index, cat) {
-                    categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
-                });
-
-                // create a marker on map
-                me.createMarker(
-                    me.map,
-                    {lat: item.venue.location.lat, lng: item.venue.location.lng},
-                    item.venue.name,
-                    new google.maps.InfoWindow({
-                        content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
-                    }),
-                    item
-                );
+               me._loadSingleLocation(item);
             });
 
             me.isMapLoading = false;
+        },
+
+
+
+        _loadSingleLocation: function(item) {
+            var me = this;
+            var categories = '';
+            $.each(item.venue.categories, function(index, cat) {
+                categories += cat.name + ((item.venue.categories.length < (index+1)) ? ', ' : '');
+            });
+
+            // create a marker on map
+            me.createMarker(
+                me.map,
+                {lat: item.venue.location.lat, lng: item.venue.location.lng},
+                item.venue.name,
+                new google.maps.InfoWindow({
+                    content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
+                }),
+                item
+            );
         },
 
         changeMapCenter: function(geometryLoc)
@@ -495,6 +520,13 @@ var main = new Vue({
                 }
                 this.circlesArray.length = 0;
             }
+        },
+        
+        _showAllMarkers: function()
+        {
+            for (i in this.markersArray) {
+                this.markersArray[i].setVisible(true);
+            }  
         },
 
         _drawRadiusCircle: function(center)
