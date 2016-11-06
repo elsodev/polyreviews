@@ -120,7 +120,11 @@ class HomeController extends Controller
         }
       
     }
-    
+
+    /**
+     * @param Request $request
+     * @return null|string
+     */
     public function getSingleLocation(Request $request)
     {
         $this->validate($request, [
@@ -130,7 +134,7 @@ class HomeController extends Controller
         // using Foursquare venue search API
         try{
             $response = $this->client->request('GET',
-                'https://api.foursquare.com/v2/venues/venue/'.$request->venue_id.'?'.$this->oauthQuery,
+                'https://api.foursquare.com/v2/venues/'.$request->venue_id.'?'.$this->oauthQuery,
                 [
                     'decode_content' => false
                 ]);
@@ -138,7 +142,7 @@ class HomeController extends Controller
             $content = $response->getBody()->getContents();
 
             return $content;
-            
+
         } catch(ClientException $ex) {
             return null;
         }

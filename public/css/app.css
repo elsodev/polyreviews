@@ -149,6 +149,22 @@ Main
 Main menu
 */
 
+
+#main #search_helper {
+    z-index:99;
+    font-size: 0.9em;
+    font-weight: 200;
+    color: #4F4F4F;
+    background-color:rgba(178,178,178,0.5);
+    border: 1px solid #8E8E8E;
+    padding: 5px;
+    position: fixed;
+    top: 10px;
+    left: 820px;
+    min-width:100px;
+}
+
+
 #main #mainMenu {
     width:auto;
     left:10px;

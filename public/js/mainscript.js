@@ -1,17 +1,25 @@
 var main = new Vue({
     el: '#main',
     data: {
+        // global data
         fsq_domain: 'https://foursquare.com/v/',
-        isRightPaneOpen: false,
-        isMapLoading: true,
+        isMapLoading: true, // to show an while overlay during loading
+        map : null, // main map object
+        markersArray: [], // storing google maps markers
+        circlesArray: [], // storing google maps circle drawing
+
+        // search data
         searchInput : '',
         isSearching: false,
         isLoadingSearchResults: true,
-        map : null,
-        markersArray: [],
-        circlesArray: [],
         searchResults: [],
+        searchMarker: null,
+        tempCenter: null, // Google LatLng obj,
+        // for search usage, we need to back to default center when user cancel search
 
+
+        // Right panel data
+        isRightPaneOpen: false,
         activePanel: {
             primary: {
                 title: '',
@@ -32,8 +40,10 @@ var main = new Vue({
     },
     
     ready:function() {
-        // loads google mapa
+        // loads google maps
         this.map = this.initMap();
+
+        // get nearby places based on default settings
         this.getNearby();
     },
     
@@ -136,6 +146,7 @@ var main = new Vue({
         {
             // check if current pins have this data
             var found = '';
+            var me = this;
             for(var i in this.markersArray) {
                 if(this.markersArray[i].data.venue.id == searchItem.id) {
                     found = this.markersArray[i].data;
@@ -152,7 +163,25 @@ var main = new Vue({
                 // find using server
                 this.isMapLoading = true;
 
+                ajaxGetJson('/get/location', {'venue_id': searchItem.id})
+                    .success(function(data) {
+                        // change map center
+                        me.tempCenter = me.map.getCenter();
+
+                        // set new center for search place marker
+                        me.map.setCenter(new google.maps.LatLng(
+                            data.response.venue.location.lat,
+                            data.response.venue.location.lng
+                        ));
+
+                        // create marker
+                        me._loadSingleLocation(data.response, true);
+
+                        me.isMapLoading = false;
+
+                    });
             }
+
         },
 
         cancelSearch: function() {
@@ -160,8 +189,14 @@ var main = new Vue({
             this.searchInput = ''; // empty search query
             this.isSearching = false;
             this.isLoadingSearchResults = true;
-            this.activeSearchIndex = -1;
+            this.searchResults = [];
             this._showAllMarkers(); // show all hidden markers from search
+
+            if(this.tempCenter != null)
+                this.map.setCenter(this.tempCenter); // set back original
+
+            if(this.searchMarker != null)
+                this.searchMarker.setMap(null);
 
         },
 
@@ -172,7 +207,7 @@ var main = new Vue({
 
             $.each(data.response.groups[0].items, function(index, item) {
                 // get categories
-               me._loadSingleLocation(item);
+               me._loadSingleLocation(item, false);
             });
 
             me.isMapLoading = false;
@@ -180,7 +215,7 @@ var main = new Vue({
 
 
 
-        _loadSingleLocation: function(item) {
+        _loadSingleLocation: function(item, searchMarker) {
             var me = this;
             var categories = '';
             $.each(item.venue.categories, function(index, cat) {
@@ -195,7 +230,8 @@ var main = new Vue({
                 new google.maps.InfoWindow({
                     content: '<b>'+ item.venue.name +'</b><br><small>'+ categories +'</small>'
                 }),
-                item
+                item,
+                searchMarker
             );
         },
 
@@ -221,7 +257,7 @@ var main = new Vue({
 
         },
 
-        createMarker: function(map, place, title, infowindow, data) {
+        createMarker: function(map, place, title, infowindow, data, searchMarker) {
 
             var marker = new google.maps.Marker({
                 map : map,
@@ -245,7 +281,13 @@ var main = new Vue({
             });
 
             // so we cna keep track of on map markers
-            this.markersArray.push(marker);
+            if(!searchMarker) {
+                this.markersArray.push(marker);
+            } else {
+                // since we need to delete it later on user cancel search, so search markers need
+                // to be seperated from main markers array
+                this.searchMarker = marker;
+            }
         },
 
         /**
@@ -255,6 +297,8 @@ var main = new Vue({
          */
         openRightPane: function(data)
         {
+
+
             var me = this;
             var $rightPane = $('#rightPane');
             if(!this.isRightPaneOpen) $rightPane.animate({'right': '0'}, 300);
@@ -280,12 +324,19 @@ var main = new Vue({
             };
 
             // -------------------FOURSQUARE ----------------
-            var fsq_rating =  Math.round((data.venue.rating / 10) * 5)
+            var fsq_rating =  Math.round((data.venue.rating / 10) * 5);
             var price = '';
-            for(var i = 0; i < data.venue.price.tier; i++) {
-                price += '<i class="ui dollar small icon"></i>';
+            if(typeof data.venue.price !== 'undefined') {
+
+                for(var i = 0; i < data.venue.price.tier; i++) {
+                    price += '<i class="ui dollar small icon"></i>';
+                }
+                price += '&nbsp;' + data.venue.price.message;
+
+            } else {
+                price = 'No price available';
             }
-            price += '&nbsp;' + data.venue.price.message;
+
 
             this.activePanel.fsq = {
                 isLoading: false,

@@ -63,6 +63,7 @@
                 @endif
             </ul>
         </div>
+        <div id="search_helper" class="hideThis" :class="{hideThis : !isSearching}"><p>Press 'esc' to cancel search</p></div>
         <div id="map"></div>
         <div id="rightPane">
 
@@ -79,7 +80,7 @@
                         <div class="ui star rating" data-rating="0"></div>
                     </div>
 
-                    <div class="x hideThis" :class="{hideThis: !isRightPaneOpen}" v-on:click="closeRightPane"></div>
+                    <div class="x hideThis" :class="{hideThis: !isRightPaneOpen || (searchResults.length > 0)}" v-on:click="closeRightPane"></div>
                 </div>
                 <!--/Primary Column-->
 
@@ -106,7 +107,7 @@
                         </div><!-- /Price -->
 
                         <div class="item">
-                            <div class="content">
+                            <div class="content" v-if="activePanel.fsq.tips.length > 0">
                                 <b>Top Tip</b>
                                 <p><a :href="activePanel.fsq.tips[0].canonicalUrl" target="_blank">
                                     @{{ activePanel.fsq.tips[0].user.firstName }} says "@{{ activePanel.fsq.tips[0].text }}"
