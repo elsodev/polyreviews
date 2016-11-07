@@ -72,7 +72,9 @@
                     <h1>@{{ activePanel.primary.title }}</h1>
                     <p class="category"><b>@{{ activePanel.primary.categories }}</b></p>
                     <p class="address"><i class="ui location arrow icon"></i>
-                       <a :href="activePanel.primary.addressLink" class="popMe" data-content="Get Directions" data-variation="mini"> @{{ activePanel.primary.address }} <i class="ui car icon"></i></a>
+                       <a :href="activePanel.primary.addressLink" class="popMe" data-content="Get Directions" data-variation="mini" target="_blank">
+                           @{{ activePanel.primary.address }} <i class="ui car icon"></i>
+                       </a>
                     </p>
                     <div class="avg_ratings" style="margin-top:1px">
                         <i class="ui star icon popMe"

@@ -370,11 +370,13 @@ var main = new Vue({
                 categories += cat.name + ((data.venue.categories.length < (index+1)) ? ', ' : '');
             });
 
+            var address = data.venue.location.formattedAddress.join(", ");
             // set data to active panel(rightpane)
             this.activePanel.primary = {
                 title : data.venue.name,
                 categories: categories,
-                address: data.venue.location.formattedAddress.join(", "),
+                address: address,
+                addressLink: 'https://google.com/maps/search/' + encodeURIComponent(address)
             };
 
             // -------------------FOURSQUARE ----------------
