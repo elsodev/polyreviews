@@ -3,7 +3,7 @@
  */
 
 var main = new Vue({
-    el: '#main',
+    el: '#main', // main element where vue will attaces itself to
     data: {
         // global data
         fsq_domain: 'https://foursquare.com/v/',
@@ -456,21 +456,16 @@ var main = new Vue({
 
                     if(syncData.facebook != null) {
 
-                        me.activePanel.fb = {
-                            isLoading: false,
-                            data: syncData.facebook
-                        };
-
+                        me._loadFacebookData(syncData.facebook);
+                        me.calculate_average_ratings(fsq_rating,  syncData.facebook[0].ratings);
 
                     } else {
                         // get facbeook data
                         ajaxGetJson('/get/facebook', {place_id: syncData.place_id, query : query})
                             .success(function(data) {
-                                
-                                me.activePanel.fb = {
-                                    isLoading: false,
-                                    data: data
-                                };
+
+                                me._loadFacebookData(data);
+                                me.calculate_average_ratings(fsq_rating, data[0].ratings);
 
                             })
                             .error(function() {
@@ -486,6 +481,14 @@ var main = new Vue({
 
         },
 
+        calculate_average_ratings: function(fsq_ratings, fb_ratings)
+        {
+            var result =  Math.round(((fsq_ratings + fb_ratings) / 10) * 5);
+
+            $('.avg_ratings .rating').rating('set rating', result);
+
+        },
+
         /**
          * Close Right Panel
          */
@@ -493,22 +496,6 @@ var main = new Vue({
         {
             if(this.isRightPaneOpen) $('#rightPane').animate({'right': '-400px'}, 200);
             this.isRightPaneOpen = false;
-        },
-
-        /**
-         * Loads Google's Data into Vue.js activePanel.g obj
-         *
-         * @param data  Google search results object array
-         * @param query
-         * @private
-         */
-        _loadGoogleData: function(data, query)
-        {
-            this.activePanel.g = {
-                link: 'https://www.google.com/search?q=' + encodeURIComponent(query),
-                isLoading: false,
-                results : data
-            };
         },
 
         /**
@@ -592,9 +579,13 @@ var main = new Vue({
 
         },
 
+        /**
+         * Filter Map markers by selected Category in Category Dropdown
+         *
+         * @param rawCategory   Selected category's value foursquare_category_id|category_name
+         */
         filterByCategory: function(rawCategory) {
-            var me = this;
-            var category = rawCategory.split("|")[0];
+            var category = rawCategory.split("|")[0]; // split up to obtain foursquare_category_id
 
             if(category == 'all') {
                 // show all markers
@@ -617,6 +608,41 @@ var main = new Vue({
 
                 });
             }
+
+        },
+
+
+        /**
+         * Loads Google's Data into Vue.js activePanel.g obj
+         *
+         * @param data  Google search results object array
+         * @param query
+         * @private
+         */
+        _loadGoogleData: function(data, query)
+        {
+            this.activePanel.g = {
+                link: 'https://www.google.com/search?q=' + encodeURIComponent(query),
+                isLoading: false,
+                results : data
+            };
+        },
+
+        _loadFacebookData: function(data)
+        {
+            var me = this;
+
+            this.activePanel.fb = {
+                isLoading: false,
+                data: data
+            };
+
+            window.setTimeout(function() {
+                $.each(me.activePanel.fb.data, function(i, item) {
+                    $('#facebook_col .list .item:nth-child('+ (i + 1) +') .data_ratings .rating').rating('set rating', Math.round(item.ratings));
+                });
+            }, 100);
+
 
         },
 
