@@ -38,7 +38,10 @@ var main = new Vue({
             }
         }
     },
-    
+
+    /**
+     * On Vue.js Ready
+     */
     ready:function() {
         // loads google maps
         this.map = this.initMap();
@@ -46,10 +49,17 @@ var main = new Vue({
         // get nearby places based on default settings
         this.getNearby();
     },
-    
+
+    /**
+     * Vue.js Obj Methods
+     */
     methods: {
 
-
+        /**
+         * Initialize Google Maps with Default Settings
+         *
+         * @returns {google.maps.Map}
+         */
         initMap : function() {
 
             // removes all point of interest, eg. shops, restaurants icons
@@ -77,8 +87,9 @@ var main = new Vue({
             });
         },
 
-
-
+        /**
+         * Obtain Nearby Locations of default settings
+         */
         getNearby: function()
         {
             var me = this;
@@ -91,7 +102,9 @@ var main = new Vue({
             });
         },
 
-
+        /**
+         * Search for a Place
+         */
         search: function()
         {
             if($.trim(this.searchInput.length) > 2) {
@@ -141,7 +154,11 @@ var main = new Vue({
         },
 
 
-
+        /**
+         * Search Results Dropdown Item onClick
+         *
+         * @param searchItem
+         */
         clickSearchResult: function(searchItem)
         {
             // check if current pins have this data
@@ -185,6 +202,9 @@ var main = new Vue({
 
         },
 
+        /**
+         * Cancel Search (normally trigger by ESC button)
+         */
         cancelSearch: function() {
             // reset
             this.searchInput = ''; // empty search query
@@ -201,6 +221,11 @@ var main = new Vue({
 
         },
 
+        /**
+         * Load Multiple Locations
+         *
+         * @param data  Foursquare venue items
+         */
         loadLocations: function(data){
             // get places
             var me = this;
@@ -215,7 +240,14 @@ var main = new Vue({
         },
 
 
-
+        /**
+         *
+         * Load a Single Location
+         *
+         * @param item  Foursquare venue item
+         * @param searchMarker  true|false  Identify this location is a Searched location
+         * @private
+         */
         _loadSingleLocation: function(item, searchMarker) {
             var me = this;
             var categories = '';
@@ -236,6 +268,11 @@ var main = new Vue({
             );
         },
 
+        /**
+         * Change Map's Center point
+         *
+         * @param geometryLoc   Google LatLng obj
+         */
         changeMapCenter: function(geometryLoc)
         {
             var me =  this;
@@ -258,6 +295,18 @@ var main = new Vue({
 
         },
 
+        /**
+         *
+         * Create a Marker on Google maps
+         * Then push it to markersArray[]
+         *
+         * @param map   current map
+         * @param place lat lng object used for pin on map
+         * @param title title of place
+         * @param infowindow    google.Infowindow
+         * @param data  Foursquare venue item
+         * @param searchMarker  true|false Identify whether this place is a searched place
+         */
         createMarker: function(map, place, title, infowindow, data, searchMarker) {
 
             var marker = new google.maps.Marker({
@@ -433,12 +482,22 @@ var main = new Vue({
 
         },
 
+        /**
+         * Close Right Panel
+         */
         closeRightPane: function()
         {
             if(this.isRightPaneOpen) $('#rightPane').animate({'right': '-400px'}, 200);
             this.isRightPaneOpen = false;
         },
 
+        /**
+         * Loads Google's Data into Vue.js activePanel.g obj
+         *
+         * @param data  Google search results object array
+         * @param query
+         * @private
+         */
         _loadGoogleData: function(data, query)
         {
             this.activePanel.g = {
@@ -451,10 +510,10 @@ var main = new Vue({
         /**
          * Up Vote and Down Vote
          *
-         * @param type
-         * @param id
-         * @param vote_type
-         * @param $index
+         * @param type  type of object, foursquare/google/facebook
+         * @param id    id of upvoted/down voted object
+         * @param vote_type 1 for upvote, 0 for downvote
+         * @param $index    Vue.js object array index
          */
         vote: function(type, id, vote_type, $index)
         {
@@ -556,7 +615,12 @@ var main = new Vue({
 
         },
 
-
+        /**
+         * Clear Map
+         * Removes all markers from map
+         *
+         * @private
+         */
         _clearMap: function()
         {
             if (this.markersArray) {
@@ -573,7 +637,13 @@ var main = new Vue({
                 this.circlesArray.length = 0;
             }
         },
-        
+
+        /**
+         * Unhide all Hidden markers on map
+         * Normally used when cancel search
+         *
+         * @private
+         */
         _showAllMarkers: function()
         {
             for (i in this.markersArray) {
@@ -581,6 +651,13 @@ var main = new Vue({
             }  
         },
 
+        /**
+         * Using Google MAPs Circle API to draw circles to
+         * highlight area of interest
+         *
+         * @param center
+         * @private
+         */
         _drawRadiusCircle: function(center)
         {
             var circle = new google.maps.Circle({
