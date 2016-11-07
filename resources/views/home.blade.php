@@ -162,7 +162,7 @@
                                     </a>
                                     <div class="data_ratings">
                                         <small>Ratings</small>
-                                        <div class="ui star rating" data-rating="0" data-id="@{{ $index }}"></div>
+                                        <div class="ui star rating" data-rating="0" data-max-rating="5">></div>
                                         <small>@{{ item.rating_count }} ratings</small>
                                     </div>
                                     <br>
