@@ -75,7 +75,10 @@
                        <a :href="activePanel.primary.addressLink" class="popMe" data-content="Get Directions" data-variation="mini"> @{{ activePanel.primary.address }} <i class="ui car icon"></i></a>
                     </p>
                     <div class="avg_ratings" style="margin-top:1px">
-                        <i class="ui star icon popMe" data-position="right center" data-content="This ratings is calculated by adding Foursquare ratings and top Facebook results ratings" data-variation="mini"></i> Average Ratings
+                        <i class="ui star icon popMe"
+                           data-position="right center"
+                           data-content="This ratings is calculated by summing Foursquare ratings and Top Facebook results ratings"
+                           data-variation="mini"></i> Average Ratings
                         <div class="ui star rating" data-rating="0"></div>
                     </div>
 
