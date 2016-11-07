@@ -72,10 +72,15 @@
                     <h1>@{{ activePanel.primary.title }}</h1>
                     <p class="category"><b>@{{ activePanel.primary.categories }}</b></p>
                     <p class="address"><i class="ui location arrow icon"></i>
-                       <a :href="activePanel.primary.addressLink" class="popMe" data-content="Get Directions" data-variation="mini"> @{{ activePanel.primary.address }} <i class="ui car icon"></i></a>
+                       <a :href="activePanel.primary.addressLink" class="popMe" data-content="Get Directions" data-variation="mini" target="_blank">
+                           @{{ activePanel.primary.address }} <i class="ui car icon"></i>
+                       </a>
                     </p>
                     <div class="avg_ratings" style="margin-top:1px">
-                        <i class="ui star icon"></i> Average Ratings
+                        <i class="ui star icon popMe"
+                           data-position="right center"
+                           data-content="This ratings is calculated by summing Foursquare ratings and Top Facebook results ratings"
+                           data-variation="mini"></i> Average Ratings
                         <div class="ui star rating" data-rating="0"></div>
                     </div>
 
@@ -160,7 +165,11 @@
                                     <a :href="item.link" target="_blank">
                                         <p><b>@{{ item.name }}</b></p>
                                     </a>
-                                    <small><i class="ui star icon"></i> <b>@{{ item.ratings }} / 5</b>, @{{ item.rating_count }} ratings</small>
+                                    <div class="data_ratings">
+                                        <small>Ratings</small>
+                                        <div class="ui star rating" data-rating="0" data-max-rating="5">></div>
+                                        <small>@{{ item.rating_count }} ratings</small>
+                                    </div>
                                     <br>
                                     <small><i class="ui dollar icon"></i> @{{ item.price_range }}</small><br>
                                     <small><i class="ui user icon"></i> @{{ item.were_here_count }} people were here</small><br>
@@ -260,7 +269,6 @@
     <script>
         $('.avg_ratings .rating')
                 .rating({
-                    initialRating: 0,
                     maxRating: 5,
                     interactive: false
                 });
