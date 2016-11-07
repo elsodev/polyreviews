@@ -10,7 +10,7 @@ class Place extends Model
 
     protected $table = 'places';
     protected $fillable = [
-        'lng', 'lat', 'name', 'address', 'description', 'contact', 'avg_rating', 'last_fetch'
+        'lng', 'lat', 'name', 'address', 'description', 'contact', 'avg_rating', 'last_fetch', 'data'
     ];
 
     /**
