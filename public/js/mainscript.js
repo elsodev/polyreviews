@@ -1,3 +1,7 @@
+/**
+ * @author  Elson Tan (nedex.io)
+ */
+
 var main = new Vue({
     el: '#main',
     data: {
@@ -9,18 +13,18 @@ var main = new Vue({
         circlesArray: [], // storing google maps circle drawing
 
         // search data
-        searchInput : '',
-        isSearching: false,
-        isLoadingSearchResults: true,
-        searchResults: [],
-        searchMarker: null,
+        searchInput : '', // model for search input textbox
+        isSearching: false, // to show and hide search results dropdown
+        isLoadingSearchResults: true,   // to show and hide search results loading text
+        searchResults: [], // to store search results
+        searchMarker: null, // to temporary hold the search marker
         tempCenter: null, // Google LatLng obj,
         // for search usage, we need to back to default center when user cancel search
 
 
         // Right panel data
-        isRightPaneOpen: false,
-        activePanel: {
+        isRightPaneOpen: false, // to show and hide right panel
+        activePanel: { // active panel(right panel) data structures
             primary: {
                 title: '',
                 categories: '',
@@ -537,6 +541,7 @@ var main = new Vue({
             var current_set;
             var selected;
 
+            // set current set of data to appropiate data structures, based on object type(type)
             if(type == 'google') {
                 current_set = me.activePanel.g.results;
                 selected = current_set[$index];
