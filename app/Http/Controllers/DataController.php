@@ -48,7 +48,7 @@ class DataController extends Controller
                 'name' => $data['venue']['name'],
                 'address' => json_encode($data['venue']['location']['formattedAddress']),
                 'contact' => '',
-                'data' => $data,
+                'data' => json_encode($data),
                 'last_fetch' => \Carbon\Carbon::now()->toDateTimeString()
             ]);
 
