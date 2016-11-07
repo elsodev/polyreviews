@@ -485,7 +485,12 @@ var main = new Vue({
 
         calculate_average_ratings: function(fsq_ratings, fb_ratings)
         {
-            var result =  Math.round(((fsq_ratings + fb_ratings) / 10) * 5);
+            if(typeof fb_ratings == 'undefined') fb_ratings = 0;
+
+            var result = fsq_ratings;
+            if(fb_ratings != 0) {
+                result =  Math.round(((fsq_ratings + fb_ratings) / 10) * 5);
+            }
 
             $('.avg_ratings .rating').rating('set rating', result);
 
