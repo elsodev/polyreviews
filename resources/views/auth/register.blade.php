@@ -73,6 +73,7 @@
 
                     <div class="field">
                         <input type="submit" class="ui button green" value="Register">
+                        <a href="{{ url('/login') }}" style="float:right;"><i class="chevron circle left icon"></i>back to Login</a>
                     </div>
                 </form>
             </div>

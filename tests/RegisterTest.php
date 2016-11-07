@@ -12,7 +12,7 @@ class RegisterTest extends TestCase
     public function testRegisterPage()
     {
         $this->visit('/register')
-            ->see('PolyReviews Register');
+            ->see('Register');
     }
 
     /**

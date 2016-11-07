@@ -281,7 +281,7 @@ var main = new Vue({
                 infowindow.close();
             });
 
-            // so we cna keep track of on map markers
+            // so we can keep track of on map markers
             if(!searchMarker) {
                 this.markersArray.push(marker);
             } else {
@@ -353,7 +353,7 @@ var main = new Vue({
             };
             
             $('#foursquare_col .data_ratings .rating').rating('set rating', fsq_rating);
-            
+
             // sync with server, cache the data
             ajaxPostJson('/sync', {fsq: data})
                 .success(function(syncData) {

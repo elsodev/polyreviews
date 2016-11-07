@@ -91,4 +91,9 @@ class HomeTest extends TestCase
 
         $this->assertEquals(200, $response->status()); // 200 - success
     }
+
+    public function testSearch()
+    {
+
+    }
 }
