@@ -15,10 +15,7 @@ class DataTest extends TestCase
      */
     public function testSync_POST_withData()
     {
-        $responses = app('App\Http\Controllers\HomeController')->getStartingPins();
-        $responses = json_decode($responses, true);
-
-        $data = $responses["response"]["groups"][0]["items"][0]; // get foursquare first item search result
+        $data = $this->getValidFoursquareData();
 
         $input = [
             'fsq' => $data
@@ -69,10 +66,7 @@ class DataTest extends TestCase
      */
     public function testGoogleData_GET_withData()
     {
-        $responses = app('App\Http\Controllers\HomeController')->getStartingPins();
-        $responses = json_decode($responses, true);
-
-        $data = $responses["response"]["groups"][0]["items"][0]; // get foursquare first item search result
+        $data = $this->getValidFoursquareData();
 
         $input = [
             'fsq' => $data
@@ -82,8 +76,8 @@ class DataTest extends TestCase
 
         $result = json_decode($this->response->getContent()); // get place_id from the method
 
-        $name = $responses["response"]["groups"][0]["items"][0]["venue"]["name"];
-        $address = $responses["response"]["groups"][0]["items"][0]["venue"]["location"]["formattedAddress"][0];
+        $name = $data["venue"]["name"];
+        $address = $data["venue"]["location"]["formattedAddress"][0];
 
         $query = $name . ' ' . $address . ' review';
         $place_id = $result->place_id;
@@ -119,12 +113,10 @@ class DataTest extends TestCase
      * Expected return: status code (422)
      * [Unprocessable Entity] (invalid data)
      */
-    public function testGoogleData_GET_missingData()
+    public function testGoogleData_GET_withMissingData()
     {
-        $responses = app('App\Http\Controllers\HomeController')->getStartingPins();
-        $responses = json_decode($responses, true);
 
-        $data = $responses["response"]["groups"][0]["items"][0]; // get foursquare first item search result
+        $data = $this->getValidFoursquareData();
 
         $input = [
             'fsq' => $data
@@ -149,7 +141,7 @@ class DataTest extends TestCase
      * Test: GET google data with Invalid Data
      *
      * Expected return: status code (500)
-     * [Unprocessable Entity] (invalid data)
+     * [Internal Server Error] (code is not correct)
      */
     public function testGoogleData_GET_withInvalidData()
     {
@@ -165,24 +157,102 @@ class DataTest extends TestCase
 
     //************************** Facebook Get Test *****************************//
 
+    /**
+     * Test: GET facebook data with Valid data request
+     *
+     * Expected return: status code(200)
+     * [OK]
+     */
     public function testFacebookData_GET_withData()
     {
-        /*
-         * var getAddress;
-                    if(typeof data.venue.location.formattedAddress[1] == 'undefined') {
-                        getAddress = data.venue.location.formattedAddress[0];
-                    } else {
-                        getAddress =  data.venue.location.formattedAddress[1];
-                    }
-
-                    // generate query
-                    query = data.venue.name + ' ' + getAddress.replace(/[0-9]/g, '');
-         */
 
         $data = $this->getValidFoursquareData();
 
-        typeof($data);
+        if(gettype($data["venue"]["location"]["formattedAddress"][1]) == NULL){
+            $getAddress = $data["venue"]["location"]["formattedAddress"][0];
+        } else {
+            $getAddress = $data["venue"]["location"]["formattedAddress"][1];
+        }
 
+        $query = $data["venue"]["name"] . ' ' . preg_replace('/[0-9]/', '', $getAddress);
+
+        $input = [
+            'fsq' => $data
+        ];
+
+        $this->json('POST','/sync', $input);
+
+        $result = json_decode($this->response->getContent()); // get place_id from the method
+
+        $place_id = $result->place_id;
+
+        $request = [
+            'place_id' => $place_id,
+            'query' => $query
+        ];
+
+        $this->json('GET', '/get/facebook', $request);
+
+        $this->assertEquals(200, $this->response->getStatusCode());
+
+    }
+
+    /**
+     * Test: GET facebook data without any Data Request
+     *
+     * Expected return: status code (422)
+     * [Unprocessable Entity] (invalid data)
+     */
+    public function testFacebookData_GET_withoutData()
+    {
+        $this->json('GET', '/get/facebook');
+
+        $this->assertEquals(422, $this->response->getStatusCode());
+    }
+
+    /**
+     * Test: GET facebook data with one Missing Data Request
+     *
+     * Expected return: status code (422)
+     * [Unprocessable Entity] (invalid data)
+     */
+    public function testFacebookData_GET_withMissingData()
+    {
+        $data = $this->getValidFoursquareData();
+
+        if(gettype($data["venue"]["location"]["formattedAddress"][1]) == NULL){
+            $getAddress = $data["venue"]["location"]["formattedAddress"][0];
+        } else {
+            $getAddress = $data["venue"]["location"]["formattedAddress"][1];
+        }
+
+        $query = $data["venue"]["name"] . ' ' . preg_replace('/[0-9]/', '', $getAddress);
+
+        $request = [
+            'query' => $query
+        ];
+
+        $this->json('GET', '/get/facebook', $request);
+
+        $this->assertEquals(422, $this->response->getStatusCode());
+
+    }
+
+    /**
+     * Test: GET facebook data with Invalid Data Request
+     *
+     * Expected return: empty array (string type)
+     */
+    public function testFacebookData_GET_invalidData()
+    {
+        $input = [
+            'place_id' => 'string type invalid',
+            'query' => 'some random query'
+        ];
+
+        $this->json('GET', '/get/facebook', $input);
+
+        $this->assertTrue($this->response->getContent() == "[]");
     }
 
     //************************** Vote Test *****************************//
@@ -267,15 +337,8 @@ class DataTest extends TestCase
 
         $data = $responses["response"]["groups"][0]["items"][0]; // get foursquare first item search result
 
-        $input = [
-            'fsq' => $data
-        ];
 
-        $this->json('POST','/sync', $input);
-
-        $result = json_decode($this->response->getContent()); // get place_id from the method
-
-        return $result;
+        return $data;
     }
 
 }

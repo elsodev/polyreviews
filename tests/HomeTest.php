@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class HomeTest extends TestCase
 {
+    //************************** Route Test *****************************//
     /**
      * Test: visit the home page with url('/')
      */
@@ -24,6 +25,7 @@ class HomeTest extends TestCase
             ->see('POLYREVIEWS');
     }
 
+    //************************** Start Pin Test *****************************//
     /**
      * Test: Get starting Pin
      */
@@ -35,6 +37,7 @@ class HomeTest extends TestCase
             ->dontSee("\"meta\":{\"code\":400"); // parameter error return code 400
     }
 
+    //************************** Location Test *****************************//
     /**
      * Test: Get location without passing latitude and longitude argument
      * - without any input request
@@ -92,7 +95,8 @@ class HomeTest extends TestCase
         $this->assertEquals(200, $response->status()); // 200 - success
     }
 
-    public function testSearch()
+    //************************** Single Location Test *****************************//
+    public function testSingleLocation_GET_withData()
     {
 
     }
