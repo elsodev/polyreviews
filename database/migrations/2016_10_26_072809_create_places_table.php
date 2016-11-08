@@ -22,7 +22,7 @@ class CreatePlacesTable extends Migration
             $table->text('address')->nullable();
             $table->text('description')->nullable();
             $table->text('contact')->nullable();
-            $table->json('data')->nullable(); // foursquare data store
+            $table->text('data')->nullable(); // foursquare data store
             $table->timestamp('last_fetch');
             $table->timestamps();
 

@@ -5,7 +5,7 @@
  */
 require 'recipe/laravel.php';
 
-server('pr_prod', '128.199.125.135', 2228)
+server('pr_prod', '128.199.85.2', 2228)
     ->user('root')
     ->forwardAgent() // You can use identity key, ssh config, or username/password to auth on the server.
     ->stage('production')
@@ -31,15 +31,11 @@ task('set_permissions', function () {
     run('chmod -R 655 {{deploy_path}}/shared/.env');
 })->desc('Changing ownership');
 
-/**
- * Restart php-fpm on success deploy.
- */
-task('php-fpm:restart', function () {
-    // Attention: The user must have rights for restart service
-    // Attention: the command "sudo /bin/systemctl restart php-fpm.service" used only on CentOS system
-    // /etc/sudoers: username ALL=NOPASSWD:/bin/systemctl restart php-fpm.service
-    run('sudo /bin/systemctl restart php-fpm.service');
-})->desc('Restart PHP-FPM service');
+// php opcache will make our symlink to previous release
+// we need to clear this cache
+task('php-fpm:restart', function() {
+    run('restart php5-fpm'); //ubuntu
+});
 
 
 task('deploy', [
