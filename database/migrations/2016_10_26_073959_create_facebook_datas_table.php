@@ -18,7 +18,7 @@ class CreateFacebookDatasTable extends Migration
             $table->integer('place_id')->unsigned();
             $table->float('ratings')->default(0);
             $table->string('obj_id');
-            $table->json('data')->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
 
             $table->foreign('place_id')->references('id')
